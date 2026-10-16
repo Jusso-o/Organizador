@@ -1,0 +1,19 @@
+[[regras]]
+nome = "Imagens"
+extensoes = ["jpg", "jpeg", "png", "gif", "webp"]
+destino = "Imagens"
+
+[[regras]]
+nome = "Documentos"
+extensoes = ["pdf", "docx", "txt", "xlsx"]
+destino = "Documentos"
+
+[[regras]]
+nome = "Instaladores"
+extensoes = ["exe", "msi"]
+destino = "Instaladores"
+
+[[regras]]
+nome = "Musicas"
+extensoes = ["mp3", "wav", "flac"]
+destino = "Musicas"
