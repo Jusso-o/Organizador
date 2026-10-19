@@ -3,6 +3,7 @@ use organizador_core::{
     salvar_diario, Config,
 };
 use std::path::Path;
+use std::sync::atomic::AtomicBool;
 
 const DIARIO: &str = "diario.json";
 
@@ -99,7 +100,10 @@ fn vigiar(pasta: &str, regras: &str) {
 
     println!("Vigiando '{pasta}'... (Ctrl+C para parar)");
 
-    let resultado = monitorar(Path::new(pasta), &config, Path::new(DIARIO), |msg| {
+    // Na CLI ninguém aciona a parada (usamos Ctrl+C), mas a função exige a bandeira.
+    let parar = AtomicBool::new(false);
+
+    let resultado = monitorar(Path::new(pasta), &config, Path::new(DIARIO), &parar, |msg| {
         println!("{msg}")
     });
 

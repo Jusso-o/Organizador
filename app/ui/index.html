@@ -1,0 +1,519 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Organizador</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #14161a;
+        --card: #1d2026;
+        --borda: #2c313a;
+        --texto: #e6e8eb;
+        --suave: #9aa3af;
+        --azul: #3b82f6;
+        --verde: #22c55e;
+        --vermelho: #ef4444;
+        --amarelo: #eab308;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      [hidden] {
+        display: none !important;
+      }
+      body {
+        margin: 0;
+        padding: 20px;
+        background: var(--bg);
+        color: var(--texto);
+        font-family: "Segoe UI", system-ui, sans-serif;
+        font-size: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      h1 {
+        margin: 0;
+        font-size: 20px;
+      }
+      h2 {
+        margin: 0 0 10px;
+        font-size: 14px;
+      }
+      .status {
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        border: 1px solid var(--borda);
+        color: var(--suave);
+      }
+      .status.ativo {
+        color: var(--verde);
+        border-color: var(--verde);
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--borda);
+        border-radius: 10px;
+        padding: 14px;
+      }
+      .suave {
+        color: var(--suave);
+        font-size: 12px;
+      }
+      .linha {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      input {
+        padding: 8px 10px;
+        background: var(--bg);
+        color: var(--texto);
+        border: 1px solid var(--borda);
+        border-radius: 6px;
+        font-size: 13px;
+        width: 100%;
+      }
+      #pasta {
+        flex: 1;
+        min-width: 200px;
+        width: auto;
+        cursor: default;
+      }
+      button {
+        padding: 8px 16px;
+        border-radius: 6px;
+        border: 1px solid var(--borda);
+        background: var(--card);
+        color: var(--texto);
+        font-size: 13px;
+        cursor: pointer;
+      }
+      button:hover:not(:disabled) {
+        border-color: var(--azul);
+      }
+      button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+      button.principal {
+        background: var(--azul);
+        border-color: var(--azul);
+      }
+      button.ligado {
+        background: var(--verde);
+        border-color: var(--verde);
+        color: #04210f;
+      }
+      button.icone {
+        padding: 4px 9px;
+      }
+      .confirma {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 12px;
+        padding: 10px 12px;
+        border: 1px solid var(--amarelo);
+        border-radius: 8px;
+      }
+      .confirma span {
+        flex: 1;
+        min-width: 200px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 4px 6px;
+        border-bottom: 1px solid var(--borda);
+      }
+      th {
+        color: var(--suave);
+        font-weight: 600;
+        position: sticky;
+        top: 0;
+        background: var(--card);
+      }
+      #regras-box {
+        max-height: 230px;
+        overflow: auto;
+        margin-bottom: 10px;
+      }
+      #regras td:nth-child(1) {
+        width: 24%;
+      }
+      #regras td:nth-child(3) {
+        width: 24%;
+      }
+      #regras td:nth-child(4) {
+        width: 44px;
+      }
+      .colunas {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .painel {
+        height: 230px;
+        display: flex;
+        flex-direction: column;
+      }
+      .rolagem {
+        overflow: auto;
+        flex: 1;
+      }
+      #log {
+        font-family: Consolas, monospace;
+        font-size: 12px;
+        line-height: 1.6;
+      }
+      .vazio {
+        color: var(--suave);
+        font-size: 12px;
+        padding: 8px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Organizador</h1>
+      <span id="status" class="status">Automático desligado</span>
+    </header>
+
+    <section class="card">
+      <h2>1. Qual pasta organizar?</h2>
+      <div class="linha">
+        <input id="pasta" readonly placeholder="Nenhuma pasta escolhida" />
+        <button id="btn-escolher">Escolher pasta…</button>
+        <button id="btn-downloads">Usar Downloads</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <details>
+        <summary>
+          <b>2. Regras</b>
+          <span class="suave"
+            >— para onde cada tipo de arquivo vai (clique para editar)</span
+          >
+        </summary>
+        <p class="suave">
+          A primeira regra que combinar com o arquivo é a usada. Separe as
+          extensões por vírgula. As mudanças são salvas sozinhas quando você
+          organiza.
+        </p>
+        <div id="regras-box">
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Extensões</th>
+                <th>Pasta de destino</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="regras"></tbody>
+          </table>
+        </div>
+        <div class="linha">
+          <button id="btn-add-regra">+ Adicionar regra</button>
+          <button id="btn-padrao">Restaurar padrão</button>
+        </div>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2>3. O que fazer?</h2>
+      <div class="linha">
+        <button id="btn-organizar" class="principal">Organizar agora</button>
+        <button id="btn-vigia">Ligar organização automática</button>
+        <button id="btn-desfazer">Desfazer último lote</button>
+      </div>
+      <div id="confirma" class="confirma" hidden>
+        <span id="confirma-texto"></span>
+        <button id="btn-confirmar" class="principal">Sim, organizar</button>
+        <button id="btn-cancelar">Cancelar</button>
+      </div>
+    </section>
+
+    <div class="colunas">
+      <section class="card painel">
+        <h2>Prévia</h2>
+        <div class="rolagem">
+          <table>
+            <thead>
+              <tr>
+                <th>Arquivo</th>
+                <th>Vai para</th>
+              </tr>
+            </thead>
+            <tbody id="plano"></tbody>
+          </table>
+          <div id="previa-vazia" class="vazio">
+            Clique em "Organizar agora" para ver o que seria movido.
+          </div>
+        </div>
+      </section>
+      <section class="card painel">
+        <h2>Atividade</h2>
+        <div class="rolagem" id="log"></div>
+      </section>
+    </div>
+
+    <script type="module">
+      const { invoke } = window.__TAURI__.core;
+      const { listen } = window.__TAURI__.event;
+      const abrirSeletor = window.__TAURI__.dialog?.open;
+
+      const $ = (id) => document.getElementById(id);
+      let rodando = false;
+
+      // ---------- utilidades ----------
+      function lerSalvo(chave) {
+        try {
+          return localStorage.getItem(chave) || "";
+        } catch {
+          return "";
+        }
+      }
+      function salvar(chave, valor) {
+        try {
+          localStorage.setItem(chave, valor);
+        } catch {
+          /* tudo bem */
+        }
+      }
+
+      // textContent (e não innerHTML): nomes de arquivo nunca viram HTML.
+      function log(msg) {
+        const hora = new Date().toLocaleTimeString("pt-BR");
+        const linha = document.createElement("div");
+        linha.textContent = `[${hora}] ${msg}`;
+        $("log").appendChild(linha);
+        $("log").scrollTop = $("log").scrollHeight;
+      }
+
+      const pasta = () => $("pasta").value.trim();
+
+      // ---------- pasta ----------
+      function definirPasta(caminho) {
+        $("pasta").value = caminho;
+        salvar("pasta", caminho);
+        esconderConfirmacao();
+      }
+
+      $("btn-escolher").onclick = async () => {
+        if (!abrirSeletor) {
+          log("Erro: o seletor de pastas não está disponível.");
+          return;
+        }
+        try {
+          const escolhida = await abrirSeletor({
+            directory: true,
+            multiple: false,
+            title: "Escolha a pasta para organizar",
+          });
+          if (typeof escolhida === "string") definirPasta(escolhida);
+        } catch (e) {
+          log(`Erro: ${e}`);
+        }
+      };
+
+      $("btn-downloads").onclick = async () =>
+        definirPasta(await invoke("pasta_padrao"));
+
+      // ---------- regras ----------
+      function linhaRegra(r) {
+        const tr = document.createElement("tr");
+        const campos = [
+          ["nome", r.nome, "Nome"],
+          ["ext", r.extensoes.join(", "), "jpg, png, gif"],
+          ["destino", r.destino, "Pasta"],
+        ];
+        for (const [classe, valor, dica] of campos) {
+          const td = document.createElement("td");
+          const input = document.createElement("input");
+          input.className = classe;
+          input.value = valor;
+          input.placeholder = dica;
+          td.appendChild(input);
+          tr.appendChild(td);
+        }
+        const td = document.createElement("td");
+        const x = document.createElement("button");
+        x.className = "icone";
+        x.textContent = "✕";
+        x.title = "Remover regra";
+        x.onclick = () => tr.remove();
+        td.appendChild(x);
+        tr.appendChild(td);
+        return tr;
+      }
+
+      function mostrarRegras(lista) {
+        $("regras").replaceChildren(...lista.map(linhaRegra));
+      }
+
+      function lerRegrasDaTela() {
+        return [...document.querySelectorAll("#regras tr")].map((tr) => ({
+          nome: tr.querySelector(".nome").value,
+          extensoes: tr.querySelector(".ext").value.split(/[,;\s]+/),
+          destino: tr.querySelector(".destino").value,
+        }));
+      }
+
+      // Valida no Rust, grava e devolve a versão limpa para a tela.
+      async function salvarRegras() {
+        mostrarRegras(
+          await invoke("salvar_regras", { regras: lerRegrasDaTela() }),
+        );
+      }
+
+      $("btn-add-regra").onclick = () => {
+        $("regras").appendChild(
+          linhaRegra({ nome: "", extensoes: [], destino: "" }),
+        );
+      };
+
+      $("btn-padrao").onclick = async () => {
+        mostrarRegras(await invoke("regras_padrao"));
+        log("Regras padrão restauradas (serão salvas quando você organizar).");
+      };
+
+      // ---------- organizar agora (prévia + confirmação) ----------
+      function mostrarPrevia(linhas) {
+        const corpo = $("plano");
+        corpo.replaceChildren();
+        for (const l of linhas) {
+          const tr = document.createElement("tr");
+          for (const texto of [l.origem, l.destino]) {
+            const td = document.createElement("td");
+            td.textContent = texto;
+            tr.appendChild(td);
+          }
+          corpo.appendChild(tr);
+        }
+        $("previa-vazia").hidden = linhas.length > 0;
+        if (linhas.length === 0)
+          $("previa-vazia").textContent = "Nada para organizar nesta pasta.";
+      }
+
+      function esconderConfirmacao() {
+        $("confirma").hidden = true;
+        $("plano").replaceChildren();
+        $("previa-vazia").hidden = false;
+        $("previa-vazia").textContent =
+          'Clique em "Organizar agora" para ver o que seria movido.';
+      }
+
+      $("btn-organizar").onclick = async () => {
+        try {
+          await salvarRegras();
+          const linhas = await invoke("simular", { pasta: pasta() });
+          mostrarPrevia(linhas);
+          if (linhas.length === 0) {
+            $("confirma").hidden = true;
+            log("Nada para organizar nesta pasta.");
+            return;
+          }
+          $("confirma-texto").textContent =
+            `${linhas.length} arquivo(s) serão movidos. Confira a prévia e confirme.`;
+          $("confirma").hidden = false;
+        } catch (e) {
+          log(`Erro: ${e}`);
+        }
+      };
+
+      $("btn-confirmar").onclick = async () => {
+        $("confirma").hidden = true;
+        try {
+          log(await invoke("organizar_agora", { pasta: pasta() }));
+        } catch (e) {
+          log(`Erro: ${e}`);
+        }
+        esconderConfirmacao();
+      };
+
+      $("btn-cancelar").onclick = () => {
+        esconderConfirmacao();
+        log("Cancelado. Nada foi movido.");
+      };
+
+      // ---------- organização automática ----------
+      function setRodando(valor) {
+        rodando = valor;
+        $("status").textContent = valor
+          ? "Automático ligado"
+          : "Automático desligado";
+        $("status").classList.toggle("ativo", valor);
+        $("btn-vigia").textContent = valor
+          ? "Desligar organização automática"
+          : "Ligar organização automática";
+        $("btn-vigia").classList.toggle("ligado", valor);
+        for (const id of [
+          "btn-organizar",
+          "btn-desfazer",
+          "btn-escolher",
+          "btn-downloads",
+        ]) {
+          $(id).disabled = valor;
+        }
+      }
+
+      $("btn-vigia").onclick = async () => {
+        if (rodando) {
+          await invoke("parar_vigia");
+          return;
+        }
+        try {
+          await salvarRegras();
+          await invoke("iniciar_vigia", { pasta: pasta() });
+          setRodando(true);
+          esconderConfirmacao();
+          log(
+            "Automático ligado: arquivos novos nesta pasta serão organizados sozinhos.",
+          );
+        } catch (e) {
+          log(`Erro: ${e}`);
+        }
+      };
+
+      $("btn-desfazer").onclick = async () => {
+        try {
+          log(await invoke("desfazer"));
+        } catch (e) {
+          log(`Erro: ${e}`);
+        }
+      };
+
+      await listen("log", (evento) => log(evento.payload));
+      await listen("vigia-parou", () => {
+        setRodando(false);
+        log("Organização automática desligada.");
+      });
+
+      // ---------- início ----------
+      mostrarRegras(await invoke("carregar_regras"));
+      definirPasta(lerSalvo("pasta") || (await invoke("pasta_padrao")));
+      setRodando(false);
+      log(
+        'Pronto! Confira a pasta e clique em "Organizar agora". Você sempre vê uma prévia antes de qualquer arquivo ser movido.',
+      );
+    </script>
+  </body>
+</html>

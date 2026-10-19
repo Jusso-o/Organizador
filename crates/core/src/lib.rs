@@ -6,6 +6,7 @@ use std::io;
 use std::path::{Path, PathBuf};
 use std::sync::mpsc::{self, RecvTimeoutError};
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
+use std::sync::atomic::{AtomicBool, Ordering};
 
 // ---------- Regras ----------
 
@@ -251,6 +252,7 @@ pub fn monitorar(
     pasta: &Path,
     config: &Config,
     diario: &Path,
+    parar: &AtomicBool,
     mut log: impl FnMut(&str),
 ) -> Result<(), Box<dyn std::error::Error>> {
     let (tx, rx) = mpsc::channel();
@@ -260,6 +262,11 @@ pub fn monitorar(
     let mut pendentes: HashMap<PathBuf, Pendente> = HashMap::new();
 
     loop {
+
+        if parar.load(Ordering::Relaxed) {
+            break;
+        }
+        
         // 1) Espera até 500 ms por um evento do sistema de arquivos.
         match rx.recv_timeout(Duration::from_millis(500)) {
             Ok(Ok(evento)) => {
