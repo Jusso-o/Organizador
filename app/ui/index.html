@@ -9,6 +9,7 @@
         color-scheme: dark;
         --bg: #14161a;
         --card: #1d2026;
+        --grupo: #252a32;
         --borda: #2c313a;
         --texto: #e6e8eb;
         --suave: #9aa3af;
@@ -47,17 +48,6 @@
         margin: 0 0 10px;
         font-size: 14px;
       }
-      .status {
-        padding: 4px 12px;
-        border-radius: 999px;
-        font-size: 12px;
-        border: 1px solid var(--borda);
-        color: var(--suave);
-      }
-      .status.ativo {
-        color: var(--verde);
-        border-color: var(--verde);
-      }
       .card {
         background: var(--card);
         border: 1px solid var(--borda);
@@ -74,7 +64,9 @@
         align-items: center;
         flex-wrap: wrap;
       }
-      input {
+
+      input,
+      select {
         padding: 8px 10px;
         background: var(--bg);
         color: var(--texto);
@@ -83,12 +75,34 @@
         font-size: 13px;
         width: 100%;
       }
+      input[type="checkbox"] {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        cursor: pointer;
+        accent-color: var(--azul);
+      }
       #pasta {
         flex: 1;
         min-width: 200px;
         width: auto;
         cursor: default;
       }
+      #busca {
+        flex: 1;
+        min-width: 160px;
+        width: auto;
+      }
+      #destino-padrao,
+      #nome-nova-pasta {
+        flex: 1;
+        min-width: 200px;
+        width: auto;
+      }
+      select {
+        width: auto;
+      }
+
       button {
         padding: 8px 16px;
         border-radius: 6px;
@@ -109,28 +123,38 @@
         background: var(--azul);
         border-color: var(--azul);
       }
-      button.ligado {
-        background: var(--verde);
-        border-color: var(--verde);
-        color: #04210f;
-      }
       button.icone {
-        padding: 4px 9px;
+        padding: 2px 8px;
       }
-      .confirma {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        flex-wrap: wrap;
-        margin-top: 12px;
-        padding: 10px 12px;
-        border: 1px solid var(--amarelo);
+
+      .banner {
+        padding: 10px 14px;
         border-radius: 8px;
+        border: 1px solid var(--borda);
+        font-size: 13px;
       }
-      .confirma span {
-        flex: 1;
-        min-width: 200px;
+      .banner.ok {
+        border-color: var(--verde);
       }
+      .banner.erro {
+        border-color: var(--vermelho);
+        color: #fecaca;
+      }
+      #resultado-criar-pasta {
+        margin: 8px 0 0;
+        padding: 8px 10px;
+        border-radius: 6px;
+        overflow-wrap: anywhere;
+      }
+      #resultado-criar-pasta.ok {
+        color: #bbf7d0;
+        background: #153321;
+      }
+      #resultado-criar-pasta.erro {
+        color: #fecaca;
+        background: #3a1d20;
+      }
+
       table {
         width: 100%;
         border-collapse: collapse;
@@ -148,7 +172,9 @@
         position: sticky;
         top: 0;
         background: var(--card);
+        z-index: 1;
       }
+
       #regras-box {
         max-height: 230px;
         overflow: auto;
@@ -163,21 +189,81 @@
       #regras td:nth-child(4) {
         width: 44px;
       }
-      .colunas {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-      }
-      .painel {
-        height: 230px;
+
+      .barra {
         display: flex;
-        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
       }
-      .rolagem {
+      .tabela-box {
+        max-height: 46vh;
+        min-height: 140px;
         overflow: auto;
-        flex: 1;
+        border: 1px solid var(--borda);
+        border-radius: 8px;
+      }
+      table.lista {
+        table-layout: fixed;
+      }
+      table.lista td {
+        height: 34px;
+      }
+      table.lista td.nome {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      table.lista td.num {
+        color: var(--suave);
+        white-space: nowrap;
+      }
+      table.lista td.aviso {
+        color: var(--amarelo);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      table.lista input.dest {
+        margin: 0;
+        padding: 3px 6px;
+        font-size: 12px;
+        min-width: 0;
+      }
+      .destino-campo {
+        display: flex;
+        gap: 4px;
+      }
+      .destino-campo button {
+        flex: 0 0 auto;
+        padding: 3px 7px;
+      }
+      .btn-preview {
+        padding: 4px 8px;
+        white-space: nowrap;
+      }
+      table.lista tr.grupo td {
+        background: var(--grupo);
+        padding: 6px;
+      }
+      .cabecalho-grupo {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .rodape {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-top: 10px;
+        flex-wrap: wrap;
       }
       #log {
+        height: 120px;
+        overflow: auto;
         font-family: Consolas, monospace;
         font-size: 12px;
         line-height: 1.6;
@@ -185,37 +271,135 @@
       .vazio {
         color: var(--suave);
         font-size: 12px;
-        padding: 8px 0;
+        padding: 14px;
+        text-align: center;
+      }
+      dialog#preview-dialog {
+        width: min(900px, 92vw);
+        max-width: 92vw;
+        max-height: 90vh;
+        padding: 16px;
+        color: var(--texto);
+        background: var(--card);
+        border: 1px solid var(--borda);
+        border-radius: 10px;
+      }
+      dialog#preview-dialog::backdrop {
+        background: rgb(0 0 0 / 70%);
+      }
+      .preview-cabecalho,
+      .preview-rodape {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+      }
+      .preview-cabecalho h2 {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+      #preview-conteudo {
+        display: grid;
+        place-items: center;
+        min-height: 180px;
+        max-height: 70vh;
+        margin: 12px 0;
+        overflow: auto;
+        background: var(--bg);
+        border-radius: 8px;
+      }
+      #preview-conteudo img,
+      #preview-conteudo video {
+        display: block;
+        max-width: 100%;
+        max-height: 68vh;
+      }
+      #preview-conteudo audio {
+        width: min(600px, 90%);
+      }
+      #preview-conteudo iframe {
+        width: 100%;
+        height: 68vh;
+        border: 0;
+      }
+      #preview-conteudo pre {
+        justify-self: stretch;
+        margin: 0;
+        padding: 16px;
+        overflow: auto;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font: 13px/1.5 Consolas, monospace;
+      }
+      #preview-status.erro {
+        color: #fecaca;
       }
     </style>
   </head>
   <body>
     <header>
       <h1>Organizador</h1>
-      <span id="status" class="status">Automático desligado</span>
+      <button
+        id="btn-desfazer"
+        title="Devolve os arquivos do último lote para onde estavam"
+      >
+        ↶ Desfazer último lote
+      </button>
     </header>
 
+    <div id="banner" class="banner" hidden></div>
+
     <section class="card">
-      <h2>1. Qual pasta organizar?</h2>
+      <h2>1. Modo e pasta de origem</h2>
       <div class="linha">
+        <select id="modo" aria-label="Modo de organização">
+          <option value="manual">Manual (padrão)</option>
+          <option value="regras">Automático com regras</option>
+        </select>
         <input id="pasta" readonly placeholder="Nenhuma pasta escolhida" />
         <button id="btn-escolher">Escolher pasta…</button>
         <button id="btn-downloads">Usar Downloads</button>
       </div>
+      <p id="descricao-modo" class="suave">
+        No modo manual, escolha o destino de cada arquivo. Nada será movido sem
+        sua confirmação.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>2. Pasta de destino</h2>
+      <div class="linha">
+        <input
+          id="destino-padrao"
+          readonly
+          placeholder="Escolha uma pasta para usar como destino padrão"
+        />
+        <button id="btn-escolher-destino">Escolher destino…</button>
+      </div>
+      <div class="linha" style="margin-top: 8px">
+        <input id="nome-nova-pasta" placeholder="Nome da nova pasta" />
+        <button id="btn-criar-pasta">+ Criar pasta no destino</button>
+      </div>
+      <p id="resultado-criar-pasta" role="status" aria-live="polite" hidden></p>
+      <p class="suave">
+        Escolher um destino preenche os arquivos que ainda não têm destino.
+        Você também pode escolher uma pasta diferente em cada linha.
+      </p>
     </section>
 
     <section class="card">
       <details>
         <summary>
-          <b>2. Regras</b>
+          <b>Regras do modo automático</b>
           <span class="suave"
-            >— para onde cada tipo de arquivo vai (clique para editar)</span
+            >— sugestão de pasta para cada tipo de arquivo (clique para
+            editar)</span
           >
         </summary>
         <p class="suave">
           A primeira regra que combinar com o arquivo é a usada. Separe as
-          extensões por vírgula. As mudanças são salvas sozinhas quando você
-          organiza.
+          extensões por vírgula. Depois de editar, clique em “Atualizar lista”
+          na seção abaixo.
         </p>
         <div id="regras-box">
           <table>
@@ -238,50 +422,95 @@
     </section>
 
     <section class="card">
-      <h2>3. O que fazer?</h2>
-      <div class="linha">
-        <button id="btn-organizar" class="principal">Organizar agora</button>
-        <button id="btn-vigia">Ligar organização automática</button>
-        <button id="btn-desfazer">Desfazer último lote</button>
+      <h2>3. Revise e escolha o que mover</h2>
+      <div class="barra">
+        <input id="busca" type="search" placeholder="Buscar por nome…" />
+        <select id="ordem" title="Ordenação dentro de cada grupo">
+          <option value="nome">Ordenar: nome</option>
+          <option value="tamanho">Ordenar: maior primeiro</option>
+          <option value="data">Ordenar: mais recente</option>
+        </select>
+        <button id="btn-marcar">Marcar todos</button>
+        <button id="btn-desmarcar">Desmarcar todos</button>
+        <button
+          id="btn-atualizar"
+          title="Lê a pasta de novo e aplica as regras salvas"
+        >
+          ↻ Atualizar lista
+        </button>
       </div>
-      <div id="confirma" class="confirma" hidden>
-        <span id="confirma-texto"></span>
-        <button id="btn-confirmar" class="principal">Sim, organizar</button>
-        <button id="btn-cancelar">Cancelar</button>
+
+      <div class="tabela-box">
+        <table class="lista">
+          <colgroup>
+            <col style="width: 34px" />
+            <col />
+            <col style="width: 82px" />
+            <col style="width: 92px" />
+            <col style="width: 190px" />
+            <col style="width: 92px" />
+            <col style="width: 76px" />
+          </colgroup>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Nome</th>
+              <th>Tamanho</th>
+              <th>Modificado</th>
+              <th>Vai para</th>
+              <th>Aviso</th>
+              <th>Prévia</th>
+            </tr>
+          </thead>
+          <tbody id="lista"></tbody>
+        </table>
+        <div id="lista-vazia" class="vazio" hidden></div>
+      </div>
+
+      <div class="rodape">
+        <span id="resumo" class="suave"></span>
+        <button id="btn-mover" class="principal" disabled>
+          Mover selecionados
+        </button>
       </div>
     </section>
 
-    <div class="colunas">
-      <section class="card painel">
-        <h2>Prévia</h2>
-        <div class="rolagem">
-          <table>
-            <thead>
-              <tr>
-                <th>Arquivo</th>
-                <th>Vai para</th>
-              </tr>
-            </thead>
-            <tbody id="plano"></tbody>
-          </table>
-          <div id="previa-vazia" class="vazio">
-            Clique em "Organizar agora" para ver o que seria movido.
-          </div>
-        </div>
-      </section>
-      <section class="card painel">
-        <h2>Atividade</h2>
-        <div class="rolagem" id="log"></div>
-      </section>
-    </div>
+    <section class="card">
+      <h2>Atividade</h2>
+      <div id="log"></div>
+    </section>
+
+    <dialog id="preview-dialog" aria-labelledby="preview-titulo">
+      <div class="preview-cabecalho">
+        <h2 id="preview-titulo"></h2>
+        <button id="btn-fechar-preview" type="button" aria-label="Fechar pré-visualização">
+          Fechar
+        </button>
+      </div>
+      <div id="preview-conteudo"></div>
+      <div class="preview-rodape">
+        <span id="preview-status" class="suave" role="status" aria-live="polite"></span>
+        <button id="btn-fechar-preview-rodape" type="button">Fechar</button>
+      </div>
+    </dialog>
 
     <script type="module">
       const { invoke } = window.__TAURI__.core;
-      const { listen } = window.__TAURI__.event;
       const abrirSeletor = window.__TAURI__.dialog?.open;
 
       const $ = (id) => document.getElementById(id);
-      let rodando = false;
+
+      // ---------- estado ----------
+      let itens = []; // todos os arquivos da pasta (com marcado, destino, conflito...)
+      let linhas = []; // linhas desenhadas agora: { it, cb }
+      let grupos = []; // cabeçalhos de grupo desenhados agora
+      const colapsados = new Set([""]); // grupos recolhidos; "Sem regra" começa recolhido
+      let filtro = "";
+      let ordem = "nome";
+      let ocupado = false;
+      let usarRegras = lerSalvo("modo") === "regras";
+      let previewUrl = "";
+      let previewRequest = 0;
 
       // ---------- utilidades ----------
       function lerSalvo(chave) {
@@ -308,34 +537,119 @@
         $("log").scrollTop = $("log").scrollHeight;
       }
 
-      const pasta = () => $("pasta").value.trim();
-
-      // ---------- pasta ----------
-      function definirPasta(caminho) {
-        $("pasta").value = caminho;
-        salvar("pasta", caminho);
-        esconderConfirmacao();
+      function mostrarBanner(msg, tipo = "ok") {
+        $("banner").textContent = msg;
+        $("banner").className = `banner ${tipo}`;
+        $("banner").hidden = false;
+        log(msg);
       }
 
-      $("btn-escolher").onclick = async () => {
-        if (!abrirSeletor) {
-          log("Erro: o seletor de pastas não está disponível.");
-          return;
-        }
-        try {
-          const escolhida = await abrirSeletor({
-            directory: true,
-            multiple: false,
-            title: "Escolha a pasta para organizar",
-          });
-          if (typeof escolhida === "string") definirPasta(escolhida);
-        } catch (e) {
-          log(`Erro: ${e}`);
-        }
-      };
+      function limparPreview() {
+        previewRequest++;
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+        previewUrl = "";
+        $("preview-conteudo").replaceChildren();
+        $("preview-status").textContent = "";
+        $("preview-status").className = "suave";
+      }
 
-      $("btn-downloads").onclick = async () =>
-        definirPasta(await invoke("pasta_padrao"));
+      async function visualizarArquivo(it) {
+        limparPreview();
+        const requisicao = previewRequest;
+        $("preview-titulo").textContent = it.nome;
+        $("preview-status").textContent = "Carregando pré-visualização…";
+        $("preview-dialog").showModal();
+
+        try {
+          const arquivo = await invoke("visualizar_arquivo", {
+            pasta: pasta(),
+            caminho: it.caminho,
+          });
+          if (requisicao !== previewRequest) return;
+
+          const bytes = Uint8Array.from(
+            atob(arquivo.conteudo),
+            (caractere) => caractere.charCodeAt(0),
+          );
+          const blob = new Blob([bytes], { type: arquivo.mime });
+          previewUrl = URL.createObjectURL(blob);
+
+          let elemento;
+          if (arquivo.mime.startsWith("image/")) {
+            elemento = document.createElement("img");
+            elemento.alt = `Pré-visualização de ${it.nome}`;
+            elemento.src = previewUrl;
+          } else if (arquivo.mime === "application/pdf") {
+            elemento = document.createElement("iframe");
+            elemento.title = `Pré-visualização de ${it.nome}`;
+            elemento.src = previewUrl;
+          } else if (arquivo.mime.startsWith("audio/")) {
+            elemento = document.createElement("audio");
+            elemento.controls = true;
+            elemento.src = previewUrl;
+          } else if (arquivo.mime.startsWith("video/")) {
+            elemento = document.createElement("video");
+            elemento.controls = true;
+            elemento.src = previewUrl;
+          } else {
+            elemento = document.createElement("pre");
+            elemento.textContent = new TextDecoder("utf-8", {
+              fatal: true,
+            }).decode(bytes);
+          }
+
+          $("preview-conteudo").replaceChildren(elemento);
+          $("preview-status").textContent = `${fmtTamanho(it.tamanho)} · ${arquivo.mime}`;
+        } catch (erro) {
+          if (requisicao !== previewRequest) return;
+          $("preview-status").textContent = `${erro}`;
+          $("preview-status").className = "suave erro";
+        }
+      }
+
+      function fmtTamanho(bytes) {
+        if (bytes < 1024) return `${bytes} B`;
+        const unidades = ["KB", "MB", "GB", "TB"];
+        let v = bytes / 1024;
+        let i = 0;
+        while (v >= 1024 && i < unidades.length - 1) {
+          v /= 1024;
+          i++;
+        }
+        return `${v.toFixed(v < 10 ? 1 : 0)} ${unidades[i]}`;
+      }
+
+      function fmtData(segundos) {
+        return segundos
+          ? new Date(segundos * 1000).toLocaleDateString("pt-BR")
+          : "—";
+      }
+
+      const pasta = () => $("pasta").value.trim();
+      const destinoPadrao = () => $("destino-padrao").value.trim();
+
+      function informarCriacaoPasta(mensagem, tipo) {
+        const resultado = $("resultado-criar-pasta");
+        resultado.textContent = mensagem;
+        resultado.className = tipo;
+        resultado.hidden = false;
+      }
+
+      function definirOcupado(valor) {
+        ocupado = valor;
+        for (const id of [
+          "btn-desfazer",
+          "btn-atualizar",
+          "btn-escolher",
+          "btn-escolher-destino",
+          "btn-criar-pasta",
+          "btn-downloads",
+          "modo",
+        ]) {
+          $(id).disabled = valor;
+        }
+        sincronizar();
+      }
 
       // ---------- regras ----------
       function linhaRegra(r) {
@@ -379,9 +693,10 @@
 
       // Valida no Rust, grava e devolve a versão limpa para a tela.
       async function salvarRegras() {
-        mostrarRegras(
-          await invoke("salvar_regras", { regras: lerRegrasDaTela() }),
-        );
+        const limpas = await invoke("salvar_regras", {
+          regras: lerRegrasDaTela(),
+        });
+        mostrarRegras(limpas);
       }
 
       $("btn-add-regra").onclick = () => {
@@ -391,129 +706,461 @@
       };
 
       $("btn-padrao").onclick = async () => {
-        mostrarRegras(await invoke("regras_padrao"));
-        log("Regras padrão restauradas (serão salvas quando você organizar).");
+        const padrao = await invoke("regras_padrao");
+        mostrarRegras(padrao);
+        log(
+          "Regras padrão restauradas. Clique em “Atualizar lista” para aplicar.",
+        );
       };
 
-      // ---------- organizar agora (prévia + confirmação) ----------
-      function mostrarPrevia(linhas) {
-        const corpo = $("plano");
+      // ---------- lista de revisão ----------
+      function visiveis() {
+        const f = filtro.trim().toLowerCase();
+        const lista = itens.filter(
+          (it) => !f || it.nome.toLowerCase().includes(f),
+        );
+        const comparar = {
+          nome: (a, b) =>
+            a.nome.localeCompare(b.nome, "pt-BR", { sensitivity: "base" }),
+          tamanho: (a, b) => b.tamanho - a.tamanho,
+          data: (a, b) => b.modificado - a.modificado,
+        }[ordem];
+        return lista.sort(comparar);
+      }
+
+      function criarGrupo(chave, doGrupo) {
+        const tr = document.createElement("tr");
+        tr.className = "grupo";
+        const td = document.createElement("td");
+        td.colSpan = 7;
+
+        const caixa = document.createElement("div");
+        caixa.className = "cabecalho-grupo";
+
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.setAttribute(
+          "aria-label",
+          `Marcar todos de ${chave || "Sem regra"}`,
+        );
+        cb.onchange = () => {
+          for (const it of doGrupo) it.marcado = cb.checked;
+          sincronizar();
+        };
+
+        const recolhido = colapsados.has(chave);
+        const seta = document.createElement("button");
+        seta.className = "icone";
+        seta.textContent = recolhido ? "▸" : "▾";
+        seta.title = recolhido ? "Mostrar arquivos" : "Esconder arquivos";
+        seta.onclick = () => {
+          if (colapsados.has(chave)) colapsados.delete(chave);
+          else colapsados.add(chave);
+          desenhar();
+        };
+
+        const nome = document.createElement("strong");
+        nome.textContent = chave || (usarRegras ? "Sem regra" : "Arquivos");
+
+        const contagem = document.createElement("span");
+        contagem.className = "suave";
+
+        caixa.append(cb, seta, nome, contagem);
+        if (!chave) {
+          const dica = document.createElement("span");
+          dica.className = "suave";
+          dica.textContent =
+            "— escolha uma pasta em “Vai para” para incluir estes arquivos";
+          caixa.appendChild(dica);
+        }
+        td.appendChild(caixa);
+        tr.appendChild(td);
+
+        grupos.push({ itens: doGrupo, cb, contagem });
+        return tr;
+      }
+
+      function criarLinha(it) {
+        const tr = document.createElement("tr");
+
+        const tdCb = document.createElement("td");
+        const cb = document.createElement("input");
+        cb.type = "checkbox";
+        cb.setAttribute("aria-label", `Mover ${it.nome}`);
+        cb.onchange = () => {
+          it.marcado = cb.checked;
+          sincronizar();
+        };
+        tdCb.appendChild(cb);
+
+        const tdNome = document.createElement("td");
+        tdNome.className = "nome";
+        tdNome.textContent = it.nome;
+        tdNome.title = it.nome;
+
+        const tdTam = document.createElement("td");
+        tdTam.className = "num";
+        tdTam.textContent = fmtTamanho(it.tamanho);
+
+        const tdData = document.createElement("td");
+        tdData.className = "num";
+        tdData.textContent = fmtData(it.modificado);
+
+        const tdAviso = document.createElement("td");
+        tdAviso.className = "aviso";
+        const pintarAviso = () => {
+          tdAviso.textContent = it.conflito ? "⚠ já existe" : "";
+          tdAviso.title = it.conflito
+            ? "Já existe um arquivo com esse nome na pasta de destino. Este será salvo como “nome (1)”."
+            : "";
+        };
+        pintarAviso();
+
+        const tdDest = document.createElement("td");
+        const destinoCampo = document.createElement("div");
+        destinoCampo.className = "destino-campo";
+        const dest = document.createElement("input");
+        dest.className = "dest";
+        dest.readOnly = true;
+        dest.placeholder = "Escolha a pasta…";
+        dest.value = it.destino;
+        dest.title = it.destino;
+        const escolherDestino = document.createElement("button");
+        escolherDestino.type = "button";
+        escolherDestino.textContent = "…";
+        escolherDestino.title = `Escolher pasta de destino para ${it.nome}`;
+        escolherDestino.disabled = ocupado;
+        escolherDestino.onclick = async () => {
+          try {
+            const novo = await selecionarPasta(
+              `Escolha o destino para ${it.nome}`,
+              it.destino || destinoPadrao() || pasta(),
+            );
+            if (!novo) return;
+            it.destino = novo;
+            it.marcado = true;
+            dest.value = novo;
+            dest.title = novo;
+            pintarAviso();
+            sincronizar();
+            const existe = await invoke("verificar_conflito", {
+              nome: it.nome,
+              destino: novo,
+            });
+            if (it.destino === novo) {
+              it.conflito = existe;
+              pintarAviso();
+            }
+          } catch (e) {
+            mostrarBanner(`${e}`, "erro");
+          }
+        };
+        destinoCampo.append(dest, escolherDestino);
+        tdDest.appendChild(destinoCampo);
+
+        const tdPreview = document.createElement("td");
+        const botaoPreview = document.createElement("button");
+        botaoPreview.type = "button";
+        botaoPreview.className = "btn-preview";
+        botaoPreview.textContent = "Visualizar";
+        botaoPreview.title = `Pré-visualizar ${it.nome}`;
+        botaoPreview.onclick = () => visualizarArquivo(it);
+        tdPreview.appendChild(botaoPreview);
+
+        tr.append(tdCb, tdNome, tdTam, tdData, tdDest, tdAviso, tdPreview);
+        linhas.push({ it, cb });
+        return tr;
+      }
+
+      function desenhar() {
+        const corpo = $("lista");
         corpo.replaceChildren();
-        for (const l of linhas) {
-          const tr = document.createElement("tr");
-          for (const texto of [l.origem, l.destino]) {
-            const td = document.createElement("td");
-            td.textContent = texto;
-            tr.appendChild(td);
+        linhas = [];
+        grupos = [];
+
+        const lista = visiveis();
+        $("lista-vazia").hidden = lista.length > 0;
+        $("lista-vazia").textContent =
+          itens.length === 0
+            ? "Nenhum arquivo nesta pasta."
+            : "Nenhum arquivo combina com a busca.";
+
+        const mapa = new Map();
+        for (const it of lista) {
+          const chave = it.regra || "";
+          if (!mapa.has(chave)) mapa.set(chave, []);
+          mapa.get(chave).push(it);
+        }
+
+        // "Sem regra" sempre por último; os demais em ordem alfabética.
+        const chaves = [...mapa.keys()].sort((a, b) =>
+          a === "" ? 1 : b === "" ? -1 : a.localeCompare(b, "pt-BR"),
+        );
+
+        for (const chave of chaves) {
+          const doGrupo = mapa.get(chave);
+          corpo.appendChild(criarGrupo(chave, doGrupo));
+          if (!colapsados.has(chave)) {
+            for (const it of doGrupo) corpo.appendChild(criarLinha(it));
           }
-          corpo.appendChild(tr);
         }
-        $("previa-vazia").hidden = linhas.length > 0;
-        if (linhas.length === 0)
-          $("previa-vazia").textContent = "Nada para organizar nesta pasta.";
+
+        sincronizar();
       }
 
-      function esconderConfirmacao() {
-        $("confirma").hidden = true;
-        $("plano").replaceChildren();
-        $("previa-vazia").hidden = false;
-        $("previa-vazia").textContent =
-          'Clique em "Organizar agora" para ver o que seria movido.';
+      // Atualiza caixas, contagens e o botão sem redesenhar a tabela.
+      function sincronizar() {
+        for (const l of linhas) l.cb.checked = l.it.marcado;
+
+        for (const g of grupos) {
+          const marcados = g.itens.filter((i) => i.marcado).length;
+          g.cb.checked = marcados > 0 && marcados === g.itens.length;
+          g.cb.indeterminate = marcados > 0 && marcados < g.itens.length;
+          g.contagem.textContent = `${marcados} de ${g.itens.length} marcado(s)`;
+        }
+
+        const marcados = itens.filter((i) => i.marcado);
+        const prontos = marcados.filter((i) => i.destino.trim() !== "");
+        const semDestino = marcados.length - prontos.length;
+        const bytes = marcados.reduce((soma, i) => soma + i.tamanho, 0);
+
+        $("resumo").textContent =
+          itens.length === 0
+            ? ""
+            : `${marcados.length} de ${itens.length} arquivo(s) selecionado(s) · ${fmtTamanho(bytes)}${
+                semDestino > 0
+                  ? ` · ${semDestino} sem destino (escolha a pasta para poder mover)`
+                  : ""
+              }`;
+
+        $("btn-mover").textContent =
+          prontos.length > 0
+            ? `Mover ${prontos.length} arquivo(s)`
+            : "Mover selecionados";
+        $("btn-mover").disabled = ocupado || prontos.length === 0;
       }
 
-      $("btn-organizar").onclick = async () => {
+      async function analisar(salvarRegrasAntes) {
+        if (!pasta()) return;
         try {
-          await salvarRegras();
-          const linhas = await invoke("simular", { pasta: pasta() });
-          mostrarPrevia(linhas);
-          if (linhas.length === 0) {
-            $("confirma").hidden = true;
-            log("Nada para organizar nesta pasta.");
-            return;
+          if (salvarRegrasAntes && usarRegras) await salvarRegras();
+          const lista = await invoke("analisar", {
+            pasta: pasta(),
+            usarRegras,
+          });
+          itens = lista.map((i) => {
+            const destino = i.destino || (usarRegras ? "" : destinoPadrao());
+            return {
+              ...i,
+              destino,
+              marcado: usarRegras && destino !== "",
+            };
+          });
+          desenhar();
+        } catch (e) {
+          itens = [];
+          desenhar();
+          mostrarBanner(`${e}`, "erro");
+        }
+      }
+
+      // ---------- pasta ----------
+      async function definirPasta(caminho) {
+        $("pasta").value = caminho;
+        salvar("pasta", caminho);
+        $("banner").hidden = true;
+        await analisar(false);
+      }
+
+      function aplicarDestinoPadrao() {
+        const destino = destinoPadrao();
+        if (!destino) return;
+        for (const it of itens) {
+          if (!it.destino) it.destino = destino;
+        }
+        desenhar();
+      }
+
+      async function selecionarPasta(titulo, padrao = "") {
+        if (!abrirSeletor) {
+          mostrarBanner("O seletor de pastas não está disponível.", "erro");
+          return null;
+        }
+        const escolhida = await abrirSeletor({
+          directory: true,
+          multiple: false,
+          title: titulo,
+          ...(padrao ? { defaultPath: padrao } : {}),
+        });
+        return typeof escolhida === "string" ? escolhida : null;
+      }
+
+      $("btn-escolher").onclick = async () => {
+        try {
+          const escolhida = await selecionarPasta(
+            "Escolha a pasta de origem para organizar",
+            pasta(),
+          );
+          if (escolhida) await definirPasta(escolhida);
+        } catch (e) {
+          mostrarBanner(`${e}`, "erro");
+        }
+      };
+
+      $("btn-downloads").onclick = async () =>
+        definirPasta(await invoke("pasta_padrao"));
+
+      $("btn-escolher-destino").onclick = async () => {
+        try {
+          const escolhida = await selecionarPasta(
+            "Escolha a pasta de destino",
+            destinoPadrao() || pasta(),
+          );
+          if (escolhida) {
+            $("destino-padrao").value = escolhida;
+            $("destino-padrao").title = escolhida;
+            salvar("destino-padrao", escolhida);
+            aplicarDestinoPadrao();
           }
-          $("confirma-texto").textContent =
-            `${linhas.length} arquivo(s) serão movidos. Confira a prévia e confirme.`;
-          $("confirma").hidden = false;
         } catch (e) {
-          log(`Erro: ${e}`);
+          mostrarBanner(`${e}`, "erro");
         }
       };
 
-      $("btn-confirmar").onclick = async () => {
-        $("confirma").hidden = true;
-        try {
-          log(await invoke("organizar_agora", { pasta: pasta() }));
-        } catch (e) {
-          log(`Erro: ${e}`);
-        }
-        esconderConfirmacao();
-      };
-
-      $("btn-cancelar").onclick = () => {
-        esconderConfirmacao();
-        log("Cancelado. Nada foi movido.");
-      };
-
-      // ---------- organização automática ----------
-      function setRodando(valor) {
-        rodando = valor;
-        $("status").textContent = valor
-          ? "Automático ligado"
-          : "Automático desligado";
-        $("status").classList.toggle("ativo", valor);
-        $("btn-vigia").textContent = valor
-          ? "Desligar organização automática"
-          : "Ligar organização automática";
-        $("btn-vigia").classList.toggle("ligado", valor);
-        for (const id of [
-          "btn-organizar",
-          "btn-desfazer",
-          "btn-escolher",
-          "btn-downloads",
-        ]) {
-          $(id).disabled = valor;
-        }
-      }
-
-      $("btn-vigia").onclick = async () => {
-        if (rodando) {
-          await invoke("parar_vigia");
+      $("btn-criar-pasta").onclick = async () => {
+        const nome = $("nome-nova-pasta").value.trim();
+        if (!destinoPadrao()) {
+          informarCriacaoPasta(
+            "Escolha a pasta onde a nova pasta será criada.",
+            "erro",
+          );
           return;
         }
+        if (!nome) {
+          informarCriacaoPasta("Digite o nome da nova pasta.", "erro");
+          return;
+        }
+        definirOcupado(true);
         try {
-          await salvarRegras();
-          await invoke("iniciar_vigia", { pasta: pasta() });
-          setRodando(true);
-          esconderConfirmacao();
-          log(
-            "Automático ligado: arquivos novos nesta pasta serão organizados sozinhos.",
+          const resultado = await invoke("criar_pasta", {
+            pai: destinoPadrao(),
+            nome,
+          });
+          $("nome-nova-pasta").value = "";
+          $("destino-padrao").value = resultado.caminho;
+          $("destino-padrao").title = resultado.caminho;
+          salvar("destino-padrao", resultado.caminho);
+          aplicarDestinoPadrao();
+          informarCriacaoPasta(
+            resultado.criada
+              ? `Pasta criada com sucesso: ${resultado.caminho}`
+              : `A pasta já existia e está pronta para uso: ${resultado.caminho}`,
+            "ok",
           );
         } catch (e) {
-          log(`Erro: ${e}`);
+          informarCriacaoPasta(`Não foi possível criar a pasta: ${e}`, "erro");
+        } finally {
+          definirOcupado(false);
+        }
+      };
+      $("nome-nova-pasta").addEventListener("input", () => {
+        $("resultado-criar-pasta").hidden = true;
+      });
+
+      $("modo").value = usarRegras ? "regras" : "manual";
+      $("btn-fechar-preview").onclick = () => $("preview-dialog").close();
+      $("btn-fechar-preview-rodape").onclick = () => $("preview-dialog").close();
+      $("preview-dialog").addEventListener("close", limparPreview);
+      function atualizarDescricaoModo() {
+        $("descricao-modo").textContent = usarRegras
+          ? "As regras sugerem e selecionam os arquivos compatíveis. Revise a lista e confirme para mover."
+          : "No modo manual, escolha o destino de cada arquivo. Nada será movido sem sua confirmação.";
+        document.querySelector("#regras-box").closest("details").parentElement.hidden =
+          !usarRegras;
+      }
+      $("modo").onchange = async () => {
+        usarRegras = $("modo").value === "regras";
+        salvar("modo", usarRegras ? "regras" : "manual");
+        atualizarDescricaoModo();
+        await analisar(usarRegras);
+      };
+      atualizarDescricaoModo();
+
+      // ---------- barra de ferramentas ----------
+      $("busca").oninput = (e) => {
+        filtro = e.target.value;
+        desenhar();
+      };
+      $("ordem").onchange = (e) => {
+        ordem = e.target.value;
+        desenhar();
+      };
+
+      $("btn-marcar").onclick = () => {
+        for (const it of visiveis()) it.marcado = true;
+        sincronizar();
+      };
+      $("btn-desmarcar").onclick = () => {
+        for (const it of visiveis()) it.marcado = false;
+        sincronizar();
+      };
+
+      $("btn-atualizar").onclick = async () => {
+        definirOcupado(true);
+        try {
+          await analisar(true);
+        } finally {
+          definirOcupado(false);
+        }
+      };
+
+      // ---------- mover e desfazer ----------
+      $("btn-mover").onclick = async () => {
+        const escolhas = itens
+          .filter((i) => i.marcado && i.destino.trim() !== "")
+          .map((i) => ({ caminho: i.caminho, destino: i.destino.trim() }));
+        if (escolhas.length === 0) return;
+
+        definirOcupado(true);
+        try {
+          mostrarBanner(
+            await invoke("organizar_selecionados", {
+              pasta: pasta(),
+              escolhas,
+            }),
+          );
+          await analisar(false); // mostra o que sobrou na pasta
+        } catch (e) {
+          mostrarBanner(`${e}`, "erro");
+        } finally {
+          definirOcupado(false);
         }
       };
 
       $("btn-desfazer").onclick = async () => {
+        definirOcupado(true);
         try {
-          log(await invoke("desfazer"));
+          mostrarBanner(await invoke("desfazer"));
+          await analisar(false);
         } catch (e) {
-          log(`Erro: ${e}`);
+          mostrarBanner(`${e}`, "erro");
+        } finally {
+          definirOcupado(false);
         }
       };
 
-      await listen("log", (evento) => log(evento.payload));
-      await listen("vigia-parou", () => {
-        setRodando(false);
-        log("Organização automática desligada.");
-      });
-
       // ---------- início ----------
-      mostrarRegras(await invoke("carregar_regras"));
-      definirPasta(lerSalvo("pasta") || (await invoke("pasta_padrao")));
-      setRodando(false);
+      const regrasIniciais = await invoke("carregar_regras");
+      mostrarRegras(regrasIniciais);
+      $("destino-padrao").value = lerSalvo("destino-padrao");
+      $("destino-padrao").title = $("destino-padrao").value;
+
       log(
-        'Pronto! Confira a pasta e clique em "Organizar agora". Você sempre vê uma prévia antes de qualquer arquivo ser movido.',
+        usarRegras
+          ? "Pronto! Revise os arquivos sugeridos pelas regras e clique em “Mover” para confirmar."
+          : "Pronto! O modo manual está ativo. Escolha os destinos e confirme em “Mover”.",
       );
+      await definirPasta(lerSalvo("pasta") || (await invoke("pasta_padrao")));
     </script>
   </body>
 </html>
