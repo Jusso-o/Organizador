@@ -274,120 +274,638 @@
         padding: 14px;
         text-align: center;
       }
-      dialog#preview-dialog {
-        width: min(900px, 92vw);
-        max-width: 92vw;
-        max-height: 90vh;
-        padding: 16px;
-        color: var(--texto);
-        background: var(--card);
-        border: 1px solid var(--borda);
-        border-radius: 10px;
+      #preview-status.erro {
+        color: #fecaca;
       }
-      dialog#preview-dialog::backdrop {
-        background: rgb(0 0 0 / 70%);
+      :root {
+        color-scheme: dark;
+        --bg: #0c0908;
+        --card: #17110e;
+        --grupo: #211813;
+        --borda: #30231d;
+        --texto: #f5eee8;
+        --suave: #aa9a90;
+        --azul: #f4772a;
+        --verde: #43c78a;
+        --vermelho: #f06b5f;
+        --amarelo: #f4bc55;
+        --accent-soft: #392113;
       }
-      .preview-cabecalho,
-      .preview-rodape {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+      body {
+        min-width: 360px;
+        min-height: 100vh;
+        padding: 14px;
         gap: 12px;
+        background:
+          radial-gradient(ellipse at 72% 0%, rgb(68 35 17 / 18%), transparent 35%),
+          var(--bg);
+      }
+      header {
+        min-height: 38px;
+        gap: 12px;
+      }
+      .marca {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        flex: 0 0 auto;
+        border-radius: 50%;
+        background: var(--azul);
+        color: #211008;
+        font-weight: 800;
+      }
+      .marca-titulo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-width: 0;
+      }
+      h1 {
+        font-size: 15px;
+        font-weight: 700;
+      }
+      .contador {
+        padding: 3px 9px;
+        border: 1px solid var(--borda);
+        border-radius: 20px;
+        color: var(--suave);
+        background: #201713;
+        font: 11px Consolas, monospace;
+        white-space: nowrap;
+      }
+      .acoes-topo {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+      .workspace-top {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: stretch;
+        gap: 12px;
+      }
+      .card {
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid transparent;
+        border-radius: 16px;
+        background: var(--card);
+      }
+      .workspace-top .card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .card-titulo {
+        display: flex;
+        min-height: 22px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      h2 {
+        margin: 0;
+        font-size: 14px;
+      }
+      .card-titulo select {
+        max-width: 180px;
+      }
+      .linha {
+        gap: 8px;
+      }
+      input,
+      select {
+        min-height: 36px;
+        padding: 8px 11px;
+        border-color: var(--borda);
+        border-radius: 10px;
+        background: #100c0a;
+      }
+      input:focus,
+      select:focus,
+      button:focus-visible {
+        outline: 2px solid rgb(244 119 42 / 55%);
+        outline-offset: 1px;
+      }
+      #pasta,
+      #destino-padrao {
+        min-width: 0;
+        flex: 1 1 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font: 12px Consolas, monospace;
+      }
+      #nome-nova-pasta {
+        min-width: 100px;
+      }
+      button {
+        min-height: 36px;
+        padding: 8px 12px;
+        border-color: var(--borda);
+        border-radius: 10px;
+        background: #211813;
+        white-space: nowrap;
+      }
+      button:hover:not(:disabled) {
+        border-color: var(--azul);
+        background: #2a1c14;
+      }
+      button.principal {
+        border-color: var(--azul);
+        background: var(--azul);
+        color: #211008;
+        font-weight: 700;
+      }
+      button.principal:hover:not(:disabled) {
+        background: #ff914d;
+      }
+      #btn-atualizar {
+        order: -1;
+      }
+      .workspace-top .suave {
+        margin: 0;
+        line-height: 1.45;
+      }
+      .destino-extra {
+        display: flex;
+        gap: 8px;
+      }
+      .destino-extra input {
+        min-width: 0;
+      }
+      .workspace-main {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+        align-items: stretch;
+        gap: 12px;
+        min-height: 0;
+      }
+      .lista-card {
+        display: flex;
+        flex-direction: column;
+        min-height: 430px;
+      }
+      .lista-cabecalho {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+      }
+      .lista-acoes {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 6px;
+      }
+      .lista-acoes button {
+        min-height: 32px;
+        padding: 5px 10px;
+      }
+      .barra {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      #busca {
+        min-width: 100px;
+        min-height: 36px;
+      }
+      #ordem {
+        min-height: 36px;
+      }
+      .tabela-box {
+        min-height: 170px;
+        max-height: min(52vh, 620px);
+        flex: 1 1 auto;
+        border-color: var(--borda);
+        border-radius: 12px;
+        scrollbar-color: #75401f #17110e;
+      }
+      table {
+        font-size: 12px;
+      }
+      th,
+      td {
+        padding: 8px 7px;
+        border-bottom-color: #2a1e18;
+      }
+      th {
+        background: #17110e;
+      }
+      table.lista td {
+        height: 44px;
+      }
+      table.lista td.nome {
+        color: var(--texto);
+        font-size: 12px;
+        font-weight: 600;
+      }
+      table.lista td.num {
+        font-family: Consolas, monospace;
+      }
+      table.lista tr.grupo td {
+        padding: 7px;
+        background: #1c1410;
+      }
+      .cabecalho-grupo {
+        gap: 9px;
+      }
+      .cabecalho-grupo button {
+        min-height: 27px;
+      }
+      table.lista input.dest {
+        min-height: 28px;
+        font-size: 11px;
+      }
+      .destino-campo button {
+        min-height: 28px;
+        padding: 3px 8px;
+      }
+      .rodape {
+        margin-top: 10px;
+      }
+      #resumo {
+        max-width: 65%;
+        line-height: 1.5;
+      }
+      .painel-lateral {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+      }
+      .preview-card {
+        border-color: #482613;
+        background: linear-gradient(145deg, #532512, #29170f 68%, #1d130e);
+      }
+      .preview-metadados {
+        display: flex;
+        gap: 12px;
+        color: var(--suave);
+        font: 11px Consolas, monospace;
+      }
+      #preview-destino {
+        overflow: hidden;
+        padding: 8px 10px;
+        border-radius: 20px;
+        background: rgb(12 9 8 / 45%);
+        font: 11px Consolas, monospace;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .log-card {
+        display: flex;
+        flex: 1 1 140px;
+        flex-direction: column;
+        min-height: 150px;
+      }
+      #log {
+        min-height: 80px;
+        height: auto;
+        flex: 1 1 auto;
+        padding: 10px;
+        border-radius: 10px;
+        background: #211813;
+        overflow-wrap: anywhere;
+        font-size: 11px;
+        line-height: 1.55;
+      }
+      .log-linha::before {
+        content: "›";
+        margin-right: 7px;
+        color: var(--azul);
+      }
+      #resultado-criar-pasta.ok {
+        color: #b7f5d5;
+        background: #153321;
+      }
+      #resultado-criar-pasta.erro {
+        color: #fecaca;
+        background: #3a1d20;
+      }
+      .rules-card {
+        grid-column: 1 / -1;
+      }
+      .rules-card details > summary {
+        cursor: pointer;
+      }
+      .preview-card {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+        min-height: 280px;
+      }
+      .preview-cabecalho {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
       }
       .preview-cabecalho h2 {
         min-width: 0;
-        overflow-wrap: anywhere;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
-      #preview-conteudo {
+      .preview-controles {
+        display: flex;
+        flex: 0 0 auto;
+        align-items: center;
+        gap: 4px;
+      }
+      .preview-controles button {
+        min-width: 32px;
+        min-height: 30px;
+        padding: 4px 7px;
+      }
+      #preview-zoom-nivel {
+        min-width: 42px;
+        color: var(--suave);
+        font: 11px Consolas, monospace;
+        text-align: center;
+      }
+      #preview-nome {
+        margin-top: 12px;
+      }
+      #preview-stage {
+        position: relative;
         display: grid;
-        place-items: center;
         min-height: 180px;
-        max-height: 70vh;
-        margin: 12px 0;
+        flex: 1 1 240px;
+        place-items: start center;
+        margin-top: 12px;
         overflow: auto;
-        background: var(--bg);
-        border-radius: 8px;
+        border-radius: 12px;
+        background: linear-gradient(145deg, #341b0f, #21120c);
+        scrollbar-color: #75401f #17110e;
+        overscroll-behavior: contain;
       }
-      #preview-conteudo img,
-      #preview-conteudo video {
+      #preview-stage.vazio {
+        place-items: center;
+        padding: 0;
+      }
+      #preview-placeholder {
+        padding: 20px;
+        color: var(--suave);
+        font-size: 12px;
+        text-align: center;
+      }
+      #preview-midia {
+        display: grid;
+        min-width: 0;
+        min-height: 100%;
+        place-items: center;
+      }
+      #preview-midia img,
+      #preview-midia video,
+      #preview-midia iframe,
+      #preview-midia pre {
         display: block;
-        max-width: 100%;
-        max-height: 68vh;
-      }
-      #preview-conteudo audio {
-        width: min(600px, 90%);
-      }
-      #preview-conteudo iframe {
         width: 100%;
-        height: 68vh;
+        max-width: none;
+      }
+      #preview-midia img,
+      #preview-midia video {
+        height: auto;
+      }
+      #preview-midia iframe {
+        height: max(50vh, 360px);
         border: 0;
       }
-      #preview-conteudo pre {
-        justify-self: stretch;
+      #preview-midia audio {
+        width: min(600px, 90%);
+      }
+      #preview-midia pre {
         margin: 0;
-        padding: 16px;
-        overflow: auto;
-        white-space: pre-wrap;
+        padding: 14px;
         overflow-wrap: anywhere;
+        white-space: pre-wrap;
         font: 13px/1.5 Consolas, monospace;
+      }
+      #preview-status {
+        min-height: 18px;
+        margin-top: 8px;
       }
       #preview-status.erro {
         color: #fecaca;
+      }
+      .nome-arquivo {
+        min-width: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .nome-arquivo:hover:not(:disabled) {
+        border: 0;
+        background: transparent;
+        color: #ffad79;
+        text-decoration: underline;
+      }
+      .nome-arquivo:focus-visible {
+        outline: 2px solid var(--azul);
+        outline-offset: 2px;
+      }
+      table.lista tr.preview-selecionado td {
+        background: #382113;
+      }
+      .preview-card.expandida {
+        position: fixed;
+        z-index: 100;
+        inset: 12px;
+        min-height: 0;
+        border: 1px solid #75401f;
+        box-shadow: 0 0 0 100vmax rgb(0 0 0 / 76%);
+      }
+      .preview-card.expandida #preview-stage {
+        min-height: 0;
+        flex-basis: 0;
+      }
+      .preview-card.expandida #preview-midia iframe {
+        height: calc(100vh - 180px);
+      }
+      @media (max-width: 640px) {
+        .preview-card.expandida {
+          inset: 6px;
+          padding: 10px;
+        }
+        .preview-controles {
+          gap: 2px;
+        }
+        .preview-controles button {
+          min-width: 28px;
+          padding: 3px 5px;
+        }
+      }
+      @media (min-width: 1200px) and (min-height: 700px) {
+        body {
+          height: 100vh;
+          overflow: hidden;
+        }
+        .workspace-main {
+          flex: 1 1 auto;
+          min-height: 0;
+        }
+        .tabela-box {
+          max-height: none;
+        }
+        body.modo-regras {
+          height: auto;
+          min-height: 100vh;
+          overflow: auto;
+        }
+        body.modo-regras .tabela-box {
+          max-height: 52vh;
+        }
+      }
+      @media (max-width: 920px) {
+        body {
+          height: auto;
+          overflow: auto;
+        }
+        .workspace-main {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .painel-lateral {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        }
+        .lista-card {
+          min-height: 420px;
+        }
+      }
+      @media (max-width: 640px) {
+        body {
+          min-width: 320px;
+          padding: 10px;
+        }
+        header,
+        .acoes-topo {
+          flex-wrap: wrap;
+        }
+        .acoes-topo {
+          width: 100%;
+        }
+        .acoes-topo button {
+          flex: 1 1 auto;
+        }
+        .workspace-top {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .card {
+          padding: 13px;
+        }
+        .workspace-top .linha > button {
+          flex: 1 1 auto;
+        }
+        .lista-cabecalho {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .lista-acoes {
+          justify-content: flex-start;
+        }
+        .barra {
+          flex-wrap: wrap;
+        }
+        #busca {
+          flex: 1 1 100%;
+        }
+        .tabela-box {
+          overflow-x: auto;
+        }
+        table.lista {
+          min-width: 760px;
+        }
+        .painel-lateral {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .destino-extra {
+          flex-wrap: wrap;
+        }
       }
     </style>
   </head>
   <body>
     <header>
-      <h1>Organizador</h1>
-      <button
-        id="btn-desfazer"
-        title="Devolve os arquivos do último lote para onde estavam"
-      >
-        ↶ Desfazer último lote
-      </button>
+      <div class="marca-titulo">
+        <span class="marca" aria-hidden="true">O</span>
+        <h1>Organizador</h1>
+        <span id="selecionados-topo" class="contador">0 selecionados</span>
+      </div>
+      <div class="acoes-topo">
+        <button
+          id="btn-atualizar"
+          title="Lê a pasta de novo e aplica as regras salvas"
+        >
+          ↻ Atualizar
+        </button>
+        <button
+          id="btn-desfazer"
+          title="Devolve os arquivos do último lote para onde estavam"
+        >
+          ↶ Desfazer último lote
+        </button>
+      </div>
     </header>
 
     <div id="banner" class="banner" hidden></div>
 
-    <section class="card">
-      <h2>1. Modo e pasta de origem</h2>
-      <div class="linha">
-        <select id="modo" aria-label="Modo de organização">
-          <option value="manual">Manual (padrão)</option>
-          <option value="regras">Automático com regras</option>
-        </select>
-        <input id="pasta" readonly placeholder="Nenhuma pasta escolhida" />
-        <button id="btn-escolher">Escolher pasta…</button>
-        <button id="btn-downloads">Usar Downloads</button>
-      </div>
-      <p id="descricao-modo" class="suave">
-        No modo manual, escolha o destino de cada arquivo. Nada será movido sem
-        sua confirmação.
-      </p>
-    </section>
+    <div class="workspace-top">
+      <section class="card">
+        <div class="card-titulo">
+          <h2>Origem</h2>
+          <select id="modo" aria-label="Modo de organização">
+            <option value="manual">Manual (padrão)</option>
+            <option value="regras">Automático com regras</option>
+          </select>
+        </div>
+        <div class="linha">
+          <input id="pasta" readonly placeholder="Nenhuma pasta escolhida" />
+          <button id="btn-escolher">Escolher pasta…</button>
+          <button id="btn-downloads">Downloads</button>
+        </div>
+        <p id="descricao-modo" class="suave">
+          No modo manual, escolha o destino de cada arquivo. Nada será movido
+          sem sua confirmação.
+        </p>
+      </section>
 
-    <section class="card">
-      <h2>2. Pasta de destino</h2>
-      <div class="linha">
-        <input
-          id="destino-padrao"
-          readonly
-          placeholder="Escolha uma pasta para usar como destino padrão"
-        />
-        <button id="btn-escolher-destino">Escolher destino…</button>
-      </div>
-      <div class="linha" style="margin-top: 8px">
-        <input id="nome-nova-pasta" placeholder="Nome da nova pasta" />
-        <button id="btn-criar-pasta">+ Criar pasta no destino</button>
-      </div>
-      <p id="resultado-criar-pasta" role="status" aria-live="polite" hidden></p>
-      <p class="suave">
-        Escolher um destino preenche os arquivos que ainda não têm destino.
-        Você também pode escolher uma pasta diferente em cada linha.
-      </p>
-    </section>
+      <section class="card">
+        <div class="card-titulo">
+          <h2>Destino</h2>
+          <span class="suave" aria-hidden="true">Pasta padrão</span>
+        </div>
+        <div class="linha">
+          <input
+            id="destino-padrao"
+            readonly
+            placeholder="Escolha uma pasta para usar como destino padrão"
+          />
+          <button id="btn-escolher-destino">Escolher…</button>
+        </div>
+        <div class="destino-extra">
+          <input id="nome-nova-pasta" placeholder="Nome da nova pasta" />
+          <button id="btn-criar-pasta">＋ Criar</button>
+        </div>
+        <p id="resultado-criar-pasta" role="status" aria-live="polite" hidden></p>
+        <p class="suave">
+          O destino padrão preenche arquivos sem destino; cada arquivo também
+          pode ter uma pasta própria.
+        </p>
+      </section>
+    </div>
 
-    <section class="card">
+    <section class="card rules-card">
       <details>
         <summary>
           <b>Regras do modo automático</b>
@@ -421,78 +939,88 @@
       </details>
     </section>
 
-    <section class="card">
-      <h2>3. Revise e escolha o que mover</h2>
-      <div class="barra">
-        <input id="busca" type="search" placeholder="Buscar por nome…" />
-        <select id="ordem" title="Ordenação dentro de cada grupo">
-          <option value="nome">Ordenar: nome</option>
-          <option value="tamanho">Ordenar: maior primeiro</option>
-          <option value="data">Ordenar: mais recente</option>
-        </select>
-        <button id="btn-marcar">Marcar todos</button>
-        <button id="btn-desmarcar">Desmarcar todos</button>
-        <button
-          id="btn-atualizar"
-          title="Lê a pasta de novo e aplica as regras salvas"
-        >
-          ↻ Atualizar lista
-        </button>
-      </div>
+    <div class="workspace-main">
+      <section class="card lista-card">
+        <div class="lista-cabecalho">
+          <h2>Arquivos <span id="contagem-arquivos" class="contador">0</span></h2>
+          <div class="lista-acoes">
+            <button id="btn-marcar">Marcar visíveis</button>
+            <button id="btn-desmarcar">Desmarcar</button>
+          </div>
+        </div>
+        <div class="barra">
+          <input id="busca" type="search" placeholder="Buscar por nome…" />
+          <select id="ordem" title="Ordenação dentro de cada grupo">
+            <option value="nome">Ordenar: nome</option>
+            <option value="tamanho">Ordenar: maior primeiro</option>
+            <option value="data">Ordenar: mais recente</option>
+          </select>
+        </div>
 
-      <div class="tabela-box">
-        <table class="lista">
-          <colgroup>
-            <col style="width: 34px" />
-            <col />
-            <col style="width: 82px" />
-            <col style="width: 92px" />
-            <col style="width: 190px" />
-            <col style="width: 92px" />
-            <col style="width: 76px" />
-          </colgroup>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Nome</th>
-              <th>Tamanho</th>
-              <th>Modificado</th>
-              <th>Vai para</th>
-              <th>Aviso</th>
-              <th>Prévia</th>
-            </tr>
-          </thead>
-          <tbody id="lista"></tbody>
-        </table>
-        <div id="lista-vazia" class="vazio" hidden></div>
-      </div>
+        <div class="tabela-box">
+          <table class="lista">
+            <colgroup>
+              <col style="width: 34px" />
+              <col />
+              <col style="width: 82px" />
+              <col style="width: 92px" />
+              <col style="width: 190px" />
+              <col style="width: 92px" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Nome</th>
+                <th>Tamanho</th>
+                <th>Modificado</th>
+                <th>Vai para</th>
+                <th>Aviso</th>
+              </tr>
+            </thead>
+            <tbody id="lista"></tbody>
+          </table>
+          <div id="lista-vazia" class="vazio" hidden></div>
+        </div>
 
-      <div class="rodape">
-        <span id="resumo" class="suave"></span>
-        <button id="btn-mover" class="principal" disabled>
-          Mover selecionados
-        </button>
-      </div>
-    </section>
+        <div class="rodape">
+          <span id="resumo" class="suave"></span>
+          <button id="btn-mover" class="principal" disabled>
+            Mover selecionados →
+          </button>
+        </div>
+      </section>
 
-    <section class="card">
-      <h2>Atividade</h2>
-      <div id="log"></div>
-    </section>
-
-    <dialog id="preview-dialog" aria-labelledby="preview-titulo">
-      <div class="preview-cabecalho">
-        <h2 id="preview-titulo"></h2>
-        <button id="btn-fechar-preview" type="button" aria-label="Fechar pré-visualização">
-          Fechar
-        </button>
-      </div>
-      <div id="preview-conteudo"></div>
-      <div class="preview-rodape">
-        <span id="preview-status" class="suave" role="status" aria-live="polite"></span>
-        <button id="btn-fechar-preview-rodape" type="button">Fechar</button>
-      </div>
-    </dialog>
+      <aside class="painel-lateral">
+        <section id="preview-card" class="card preview-card">
+          <div class="preview-cabecalho">
+            <h2 id="preview-titulo">Prévia</h2>
+            <div class="preview-controles">
+              <button id="btn-preview-menos" type="button" title="Reduzir zoom" aria-label="Reduzir zoom">−</button>
+              <span id="preview-zoom-nivel">100%</span>
+              <button id="btn-preview-mais" type="button" title="Ampliar zoom" aria-label="Ampliar zoom">＋</button>
+              <button id="btn-preview-reset" type="button" title="Restaurar zoom" aria-label="Restaurar zoom">↺</button>
+              <button id="btn-preview-expandir" type="button" title="Expandir prévia" aria-label="Expandir prévia" aria-pressed="false">⛶</button>
+            </div>
+          </div>
+          <strong id="preview-nome" hidden></strong>
+          <div class="preview-metadados">
+            <span id="preview-tamanho"></span>
+            <span id="preview-data"></span>
+          </div>
+          <div id="preview-destino" title="" hidden></div>
+          <div id="preview-stage" class="vazio">
+            <div id="preview-placeholder">Clique no nome de um arquivo para visualizar aqui.</div>
+          </div>
+          <span id="preview-status" class="suave" role="status" aria-live="polite"></span>
+        </section>
+        <section class="card log-card">
+          <div class="card-titulo">
+            <h2><span aria-hidden="true">›</span> Atividade</h2>
+          </div>
+          <div id="log" aria-live="polite"></div>
+        </section>
+      </aside>
+    </div>
 
     <script type="module">
       const { invoke } = window.__TAURI__.core;
@@ -511,6 +1039,9 @@
       let usarRegras = lerSalvo("modo") === "regras";
       let previewUrl = "";
       let previewRequest = 0;
+      let itemPreviaSelecionado = null;
+      let previewZoom = 1;
+      let previewPan = null;
 
       // ---------- utilidades ----------
       function lerSalvo(chave) {
@@ -532,6 +1063,7 @@
       function log(msg) {
         const hora = new Date().toLocaleTimeString("pt-BR");
         const linha = document.createElement("div");
+        linha.className = "log-linha";
         linha.textContent = `[${hora}] ${msg}`;
         $("log").appendChild(linha);
         $("log").scrollTop = $("log").scrollHeight;
@@ -548,17 +1080,19 @@
         previewRequest++;
         if (previewUrl) URL.revokeObjectURL(previewUrl);
         previewUrl = "";
-        $("preview-conteudo").replaceChildren();
+        $("preview-stage").replaceChildren();
+        $("preview-stage").classList.add("vazio");
         $("preview-status").textContent = "";
         $("preview-status").className = "suave";
+        previewZoom = 1;
+        atualizarZoom();
       }
 
       async function visualizarArquivo(it) {
+        atualizarPainelPrevia(it);
         limparPreview();
         const requisicao = previewRequest;
-        $("preview-titulo").textContent = it.nome;
         $("preview-status").textContent = "Carregando pré-visualização…";
-        $("preview-dialog").showModal();
 
         try {
           const arquivo = await invoke("visualizar_arquivo", {
@@ -578,6 +1112,7 @@
           if (arquivo.mime.startsWith("image/")) {
             elemento = document.createElement("img");
             elemento.alt = `Pré-visualização de ${it.nome}`;
+            elemento.draggable = false;
             elemento.src = previewUrl;
           } else if (arquivo.mime === "application/pdf") {
             elemento = document.createElement("iframe");
@@ -598,13 +1133,78 @@
             }).decode(bytes);
           }
 
-          $("preview-conteudo").replaceChildren(elemento);
+          const midia = document.createElement("div");
+          midia.id = "preview-midia";
+          midia.appendChild(elemento);
+          $("preview-stage").classList.remove("vazio");
+          $("preview-stage").replaceChildren(midia);
+          atualizarZoom();
           $("preview-status").textContent = `${fmtTamanho(it.tamanho)} · ${arquivo.mime}`;
         } catch (erro) {
           if (requisicao !== previewRequest) return;
           $("preview-status").textContent = `${erro}`;
           $("preview-status").className = "suave erro";
         }
+      }
+
+      function atualizarPainelPrevia(it) {
+        itemPreviaSelecionado = it;
+        $("preview-titulo").textContent = it.nome;
+        $("preview-nome").textContent = it.nome;
+        $("preview-nome").hidden = false;
+        $("preview-tamanho").textContent = fmtTamanho(it.tamanho);
+        $("preview-data").textContent = fmtData(it.modificado);
+        $("preview-destino").textContent = it.destino
+          ? `→ ${it.destino}`
+          : "Sem destino selecionado";
+        $("preview-destino").title = it.destino;
+        $("preview-destino").hidden = false;
+        document.querySelectorAll("tr.preview-selecionado").forEach((tr) => {
+          tr.classList.remove("preview-selecionado");
+        });
+        const linha = [...document.querySelectorAll("#lista tr")].find(
+          (tr) => tr.dataset.caminho === it.caminho,
+        );
+        if (linha) linha.classList.add("preview-selecionado");
+      }
+
+      function limparPainelPrevia() {
+        itemPreviaSelecionado = null;
+        limparPreview();
+        $("preview-titulo").textContent = "Prévia";
+        $("preview-nome").textContent = "";
+        $("preview-nome").hidden = true;
+        $("preview-tamanho").textContent = "";
+        $("preview-data").textContent = "";
+        $("preview-destino").textContent = "";
+        $("preview-destino").title = "";
+        $("preview-destino").hidden = true;
+        $("preview-stage").classList.add("vazio");
+        $("preview-stage").replaceChildren(
+          Object.assign(document.createElement("div"), {
+            id: "preview-placeholder",
+            textContent: "Clique no nome de um arquivo para visualizar aqui.",
+          }),
+        );
+        document.querySelectorAll("tr.preview-selecionado").forEach((tr) => {
+          tr.classList.remove("preview-selecionado");
+        });
+      }
+
+      function atualizarZoom() {
+        $("preview-zoom-nivel").textContent =
+          `${Math.round(previewZoom * 100)}%`;
+        const midia = $("preview-midia");
+        if (!midia) return;
+        midia.style.width = `${previewZoom * 100}%`;
+        midia.style.minHeight = "100%";
+        const texto = midia.querySelector("pre");
+        if (texto) texto.style.fontSize = `${13 * previewZoom}px`;
+      }
+
+      function alterarZoom(delta) {
+        previewZoom = Math.min(4, Math.max(0.25, previewZoom + delta));
+        atualizarZoom();
       }
 
       function fmtTamanho(bytes) {
@@ -732,7 +1332,7 @@
         const tr = document.createElement("tr");
         tr.className = "grupo";
         const td = document.createElement("td");
-        td.colSpan = 7;
+        td.colSpan = 6;
 
         const caixa = document.createElement("div");
         caixa.className = "cabecalho-grupo";
@@ -782,6 +1382,7 @@
 
       function criarLinha(it) {
         const tr = document.createElement("tr");
+        tr.dataset.caminho = it.caminho;
 
         const tdCb = document.createElement("td");
         const cb = document.createElement("input");
@@ -795,7 +1396,13 @@
 
         const tdNome = document.createElement("td");
         tdNome.className = "nome";
-        tdNome.textContent = it.nome;
+        const nomeArquivo = document.createElement("button");
+        nomeArquivo.type = "button";
+        nomeArquivo.className = "nome-arquivo";
+        nomeArquivo.textContent = it.nome;
+        nomeArquivo.onclick = () => visualizarArquivo(it);
+        nomeArquivo.setAttribute("aria-label", `Visualizar ${it.nome}`);
+        tdNome.appendChild(nomeArquivo);
         tdNome.title = it.nome;
 
         const tdTam = document.createElement("td");
@@ -841,6 +1448,9 @@
             it.marcado = true;
             dest.value = novo;
             dest.title = novo;
+            if (itemPreviaSelecionado?.caminho === it.caminho) {
+              atualizarPainelPrevia(it);
+            }
             pintarAviso();
             sincronizar();
             const existe = await invoke("verificar_conflito", {
@@ -858,16 +1468,10 @@
         destinoCampo.append(dest, escolherDestino);
         tdDest.appendChild(destinoCampo);
 
-        const tdPreview = document.createElement("td");
-        const botaoPreview = document.createElement("button");
-        botaoPreview.type = "button";
-        botaoPreview.className = "btn-preview";
-        botaoPreview.textContent = "Visualizar";
-        botaoPreview.title = `Pré-visualizar ${it.nome}`;
-        botaoPreview.onclick = () => visualizarArquivo(it);
-        tdPreview.appendChild(botaoPreview);
-
-        tr.append(tdCb, tdNome, tdTam, tdData, tdDest, tdAviso, tdPreview);
+        tr.append(tdCb, tdNome, tdTam, tdData, tdDest, tdAviso);
+        if (itemPreviaSelecionado?.caminho === it.caminho) {
+          tr.classList.add("preview-selecionado");
+        }
         linhas.push({ it, cb });
         return tr;
       }
@@ -879,6 +1483,7 @@
         grupos = [];
 
         const lista = visiveis();
+        $("contagem-arquivos").textContent = itens.length;
         $("lista-vazia").hidden = lista.length > 0;
         $("lista-vazia").textContent =
           itens.length === 0
@@ -920,6 +1525,8 @@
         }
 
         const marcados = itens.filter((i) => i.marcado);
+        $("selecionados-topo").textContent =
+          `${marcados.length} selecionado${marcados.length === 1 ? "" : "s"}`;
         const prontos = marcados.filter((i) => i.destino.trim() !== "");
         const semDestino = marcados.length - prontos.length;
         const bytes = marcados.reduce((soma, i) => soma + i.tamanho, 0);
@@ -956,9 +1563,17 @@
               marcado: usarRegras && destino !== "",
             };
           });
+          if (itemPreviaSelecionado) {
+            const atualizado = itens.find(
+              (it) => it.caminho === itemPreviaSelecionado.caminho,
+            );
+            if (atualizado) atualizarPainelPrevia(atualizado);
+            else limparPainelPrevia();
+          }
           desenhar();
         } catch (e) {
           itens = [];
+          limparPainelPrevia();
           desenhar();
           mostrarBanner(`${e}`, "erro");
         }
@@ -977,6 +1592,9 @@
         if (!destino) return;
         for (const it of itens) {
           if (!it.destino) it.destino = destino;
+        }
+        if (itemPreviaSelecionado) {
+          atualizarPainelPrevia(itemPreviaSelecionado);
         }
         desenhar();
       }
@@ -1068,10 +1686,86 @@
       });
 
       $("modo").value = usarRegras ? "regras" : "manual";
-      $("btn-fechar-preview").onclick = () => $("preview-dialog").close();
-      $("btn-fechar-preview-rodape").onclick = () => $("preview-dialog").close();
-      $("preview-dialog").addEventListener("close", limparPreview);
+      $("btn-preview-mais").onclick = () => alterarZoom(0.25);
+      $("btn-preview-menos").onclick = () => alterarZoom(-0.25);
+      $("btn-preview-reset").onclick = () => {
+        previewZoom = 1;
+        atualizarZoom();
+      };
+      $("btn-preview-expandir").onclick = () => {
+        const expandido = $("preview-card").classList.toggle("expandida");
+        document.body.classList.toggle("preview-expandida", expandido);
+        $("btn-preview-expandir").setAttribute("aria-pressed", `${expandido}`);
+        $("btn-preview-expandir").title = expandido
+          ? "Restaurar tamanho da prévia"
+          : "Expandir prévia";
+        $("btn-preview-expandir").setAttribute(
+          "aria-label",
+          expandido ? "Restaurar tamanho da prévia" : "Expandir prévia",
+        );
+      };
+      $("preview-stage").addEventListener(
+        "wheel",
+        (evento) => {
+          if (!evento.ctrlKey || !itemPreviaSelecionado) return;
+          evento.preventDefault();
+          alterarZoom(evento.deltaY < 0 ? 0.1 : -0.1);
+        },
+        { passive: false },
+      );
+      $("preview-stage").addEventListener("pointerdown", (evento) => {
+        if (
+          previewZoom <= 1 ||
+          !evento.target.closest("img") ||
+          evento.button !== 0
+        ) {
+          return;
+        }
+        previewPan = {
+          x: evento.clientX,
+          y: evento.clientY,
+          left: $("preview-stage").scrollLeft,
+          top: $("preview-stage").scrollTop,
+        };
+        $("preview-stage").setPointerCapture(evento.pointerId);
+        $("preview-stage").style.cursor = "grabbing";
+      });
+      $("preview-stage").addEventListener("pointermove", (evento) => {
+        if (!previewPan) return;
+        $("preview-stage").scrollLeft =
+          previewPan.left - (evento.clientX - previewPan.x);
+        $("preview-stage").scrollTop =
+          previewPan.top - (evento.clientY - previewPan.y);
+      });
+      const encerrarMovimentoPrevia = () => {
+        previewPan = null;
+        $("preview-stage").style.cursor = "";
+      };
+      $("preview-stage").addEventListener(
+        "pointerup",
+        encerrarMovimentoPrevia,
+      );
+      $("preview-stage").addEventListener(
+        "pointercancel",
+        encerrarMovimentoPrevia,
+      );
+      document.addEventListener("keydown", (evento) => {
+        if (
+          evento.key === "Escape" &&
+          $("preview-card").classList.contains("expandida")
+        ) {
+          $("preview-card").classList.remove("expandida");
+          document.body.classList.remove("preview-expandida");
+          $("btn-preview-expandir").setAttribute("aria-pressed", "false");
+          $("btn-preview-expandir").title = "Expandir prévia";
+          $("btn-preview-expandir").setAttribute(
+            "aria-label",
+            "Expandir prévia",
+          );
+        }
+      });
       function atualizarDescricaoModo() {
+        document.body.classList.toggle("modo-regras", usarRegras);
         $("descricao-modo").textContent = usarRegras
           ? "As regras sugerem e selecionam os arquivos compatíveis. Revise a lista e confirme para mover."
           : "No modo manual, escolha o destino de cada arquivo. Nada será movido sem sua confirmação.";
