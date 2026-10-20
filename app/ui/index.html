@@ -29,7 +29,7 @@
         padding: 20px;
         background: var(--bg);
         color: var(--texto);
-        font-family: "Segoe UI", system-ui, sans-serif;
+        font-family: Inter, "Segoe UI", system-ui, sans-serif;
         font-size: 14px;
         display: flex;
         flex-direction: column;
@@ -172,7 +172,14 @@
         position: sticky;
         top: 0;
         background: var(--card);
-        z-index: 1;
+        z-index: 2;
+      }
+      .tabela-box thead th {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        background: #17110e;
+        box-shadow: 0 1px 0 #3a2a20;
       }
 
       #regras-box {
@@ -198,14 +205,39 @@
         margin-bottom: 10px;
       }
       .tabela-box {
-        max-height: 46vh;
+        display: flex;
+        flex: 1 1 0;
+        flex-direction: column;
+        height: min(46vh, 520px);
         min-height: 140px;
-        overflow: auto;
+        max-height: 46vh;
+        overflow: hidden;
         border: 1px solid var(--borda);
         border-radius: 8px;
       }
+      .tabela-scroll {
+        height: 0;
+        min-height: 0;
+        flex: 1 1 auto;
+        overflow-x: hidden;
+        overflow-y: auto;
+        scrollbar-color: #75401f #17110e;
+      }
       table.lista {
         table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 0;
+      }
+      #lista-cabecalho {
+        flex: 0 0 auto;
+        position: relative;
+        z-index: 3;
+        background: #17110e;
+        will-change: transform;
+      }
+      #lista-cabecalho th {
+        position: static;
+        background: #17110e;
       }
       table.lista td {
         height: 34px;
@@ -371,6 +403,25 @@
       .card-titulo select {
         max-width: 180px;
       }
+      .icone-svg {
+        width: 16px;
+        height: 16px;
+        flex: 0 0 auto;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.7;
+        vertical-align: middle;
+      }
+      .icone-arquivo {
+        color: var(--azul);
+      }
+      .titulo-com-icone {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
       .linha {
         gap: 8px;
       }
@@ -421,12 +472,35 @@
       button.principal:hover:not(:disabled) {
         background: #ff914d;
       }
+      button.perigo {
+        border-color: #623027;
+        color: #ff9b87;
+      }
+      button.perigo:hover:not(:disabled) {
+        border-color: #f06b5f;
+        background: #321914;
+      }
+      .acoes-topo button,
+      .lista-acoes button,
+      .destino-extra button,
+      #btn-mover {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+      }
       #btn-atualizar {
         order: -1;
       }
       .workspace-top .suave {
         margin: 0;
         line-height: 1.45;
+      }
+      .workspace-top .linha > button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding-inline: 14px;
       }
       .destino-extra {
         display: flex;
@@ -459,6 +533,44 @@
         flex-wrap: wrap;
         justify-content: flex-end;
         gap: 6px;
+      }
+      .selecao-toggle {
+        display: inline-flex;
+        min-height: 32px;
+        align-items: center;
+        gap: 9px;
+        padding: 5px 10px;
+      }
+      .toggle-trilho {
+        display: inline-flex;
+        width: 32px;
+        height: 18px;
+        align-items: center;
+        padding: 2px;
+        border: 1px solid #59483e;
+        border-radius: 20px;
+        background: #241a15;
+        transition: background 120ms ease, border-color 120ms ease;
+      }
+      .toggle-trilho::before {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #b7a79d;
+        content: "";
+        transition: transform 120ms ease, background 120ms ease;
+      }
+      .selecao-toggle[aria-checked="true"] .toggle-trilho {
+        border-color: var(--azul);
+        background: #63351b;
+      }
+      .selecao-toggle[aria-checked="true"] .toggle-trilho::before {
+        transform: translateX(14px);
+        background: #ffad79;
+      }
+      .selecao-toggle:focus-visible {
+        outline: 2px solid rgb(244 119 42 / 55%);
+        outline-offset: 2px;
       }
       .lista-acoes button {
         min-height: 32px;
@@ -592,6 +704,118 @@
       .rules-card details > summary {
         cursor: pointer;
       }
+      dialog.confirm-dialog {
+        width: min(460px, calc(100vw - 28px));
+        max-height: 85vh;
+        padding: 20px;
+        border: 1px solid #65402b;
+        border-radius: 16px;
+        background: #17110e;
+        color: var(--texto);
+      }
+      dialog.confirm-dialog::backdrop {
+        background: rgb(0 0 0 / 72%);
+      }
+      .confirm-dialog h2 {
+        margin: 0 0 10px;
+      }
+      .confirm-dialog p {
+        line-height: 1.5;
+      }
+      #confirmar-exclusao-lista {
+        max-height: 180px;
+        overflow: auto;
+        padding-left: 22px;
+        color: var(--suave);
+        font-size: 12px;
+      }
+      #confirmar-exclusao-lista li {
+        margin: 5px 0;
+        overflow-wrap: anywhere;
+      }
+      .confirm-acoes {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+        margin-top: 18px;
+      }
+      .confirm-acoes button {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+      }
+      .app-titlebar {
+        flex: 0 0 36px;
+        user-select: none;
+      }
+      .marca-titulo[data-tauri-drag-region],
+      .titlebar-drag-region {
+        -webkit-app-region: drag;
+      }
+      .marca-titulo {
+        flex: 0 0 auto;
+      }
+      .titlebar-drag-region {
+        flex: 1 1 auto;
+        min-width: 12px;
+        height: 100%;
+      }
+      .acoes-topo,
+      .window-controls {
+        -webkit-app-region: no-drag;
+      }
+      .window-controls {
+        display: flex;
+        flex: 0 0 auto;
+        align-self: stretch;
+        gap: 2px;
+        margin: -14px -14px -14px 0;
+      }
+      .window-control {
+        display: grid;
+        width: 42px;
+        min-width: 42px;
+        min-height: 36px;
+        place-items: center;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--texto);
+      }
+      .window-control:hover:not(:disabled) {
+        border-color: transparent;
+        background: #30231d;
+      }
+      .window-control.fechar:hover:not(:disabled) {
+        background: #c42b1c;
+        color: #fff;
+      }
+      .window-control svg {
+        width: 12px;
+        height: 12px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 1.4;
+      }
+      #btn-maximizar .icone-restaurar,
+      #btn-maximizar.maximizada .icone-maximizar {
+        display: none;
+      }
+      #btn-maximizar.maximizada .icone-restaurar {
+        display: block;
+      }
+      .banner {
+        position: fixed;
+        z-index: 80;
+        top: 44px;
+        right: 14px;
+        max-width: min(560px, calc(100vw - 28px));
+        background: #17110e;
+        box-shadow: 0 10px 28px rgb(0 0 0 / 35%);
+      }
       .preview-card {
         display: flex;
         flex: 1 1 auto;
@@ -693,7 +917,11 @@
         color: #fecaca;
       }
       .nome-arquivo {
+        display: inline-flex;
+        width: 100%;
         min-width: 0;
+        align-items: center;
+        gap: 8px;
         padding: 0;
         overflow: hidden;
         border: 0;
@@ -704,6 +932,9 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         cursor: pointer;
+      }
+      .nome-arquivo .icone-svg {
+        flex: 0 0 auto;
       }
       .nome-arquivo:hover:not(:disabled) {
         border: 0;
@@ -733,6 +964,61 @@
       .preview-card.expandida #preview-midia iframe {
         height: calc(100vh - 180px);
       }
+      .doc-visualizador {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+        padding: 14px;
+      }
+      .doc-pagina {
+        display: flex;
+        flex: 0 0 auto;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 9% 10%;
+        background: #fff;
+        color: #202124;
+        box-shadow: 0 3px 14px rgb(0 0 0 / 35%);
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+      }
+      .doc-pagina-conteudo {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+      }
+      .doc-paragrafo {
+        margin: 0 0 0.7em;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+      .doc-paragrafo.doc-titulo,
+      .doc-paragrafo.doc-heading1,
+      .doc-paragrafo.doc-heading2 {
+        font-weight: 700;
+      }
+      .doc-paragrafo.doc-titulo,
+      .doc-paragrafo.doc-heading1 {
+        margin-bottom: 1em;
+        font-size: 1.65em;
+      }
+      .doc-paragrafo.doc-heading2 {
+        margin-top: 0.8em;
+        font-size: 1.3em;
+      }
+      .doc-paragrafo.doc-heading3 {
+        margin-top: 0.65em;
+        font-size: 1.1em;
+        font-weight: 700;
+      }
+      .doc-pagina-numero {
+        margin-top: auto;
+        padding-top: 0.8em;
+        color: #737373;
+        font-size: 0.75em;
+        text-align: center;
+      }
       @media (max-width: 640px) {
         .preview-card.expandida {
           inset: 6px;
@@ -748,23 +1034,22 @@
       }
       @media (min-width: 1200px) and (min-height: 700px) {
         body {
-          height: 100vh;
-          overflow: hidden;
+          min-height: 100vh;
+          min-height: 100dvh;
+          height: auto;
+          overflow-x: hidden;
+          overflow-y: auto;
         }
         .workspace-main {
           flex: 1 1 auto;
-          min-height: 0;
+          min-height: 430px;
         }
         .tabela-box {
-          max-height: none;
+          max-height: min(52vh, 620px);
         }
         body.modo-regras {
           height: auto;
-          min-height: 100vh;
-          overflow: auto;
-        }
-        body.modo-regras .tabela-box {
-          max-height: 52vh;
+          min-height: 100dvh;
         }
       }
       @media (max-width: 920px) {
@@ -821,9 +1106,16 @@
           flex: 1 1 100%;
         }
         .tabela-box {
+          height: min(46vh, 420px);
+          flex: 0 1 auto;
+          min-height: 140px;
+          max-height: 46vh;
+        }
+        .tabela-scroll {
           overflow-x: auto;
         }
-        table.lista {
+        table.lista,
+        #lista-cabecalho {
           min-width: 760px;
         }
         .painel-lateral {
@@ -833,27 +1125,217 @@
           flex-wrap: wrap;
         }
       }
+      @media (min-width: 641px) {
+        body {
+          width: 100vw;
+          height: 100vh;
+          height: 100dvh;
+          min-height: 0;
+          overflow: hidden;
+          padding: 8px 12px 12px;
+          gap: 8px;
+        }
+        .app-titlebar {
+          min-height: 36px;
+        }
+        .window-controls {
+          margin: -8px -12px -8px 0;
+        }
+        .workspace-top {
+          flex: 0 0 auto;
+          gap: 8px;
+        }
+        .workspace-top .card {
+          padding: 11px 13px;
+        }
+        .workspace-top .suave {
+          font-size: 11px;
+          line-height: 1.3;
+        }
+        .workspace-top .linha,
+        .destino-extra {
+          gap: 6px;
+        }
+        .workspace-top input,
+        .workspace-top button {
+          min-height: 32px;
+          padding-top: 6px;
+          padding-bottom: 6px;
+        }
+        .workspace-top .linha > button {
+          padding-inline: 9px;
+        }
+        .rules-card {
+          flex: 0 1 auto;
+          max-height: min(28vh, 170px);
+          padding: 9px 13px;
+          overflow: auto;
+        }
+        .rules-card details[open] {
+          max-height: 100%;
+        }
+        .rules-card details > p {
+          margin: 7px 0;
+        }
+        #regras-box {
+          max-height: min(100px, 16vh);
+        }
+        .workspace-main {
+          flex: 1 1 0;
+          grid-template-columns: minmax(0, 1fr) minmax(210px, 27vw);
+          min-height: 0;
+          gap: 8px;
+        }
+        .lista-card {
+          min-height: 0;
+          padding: 11px;
+        }
+        .lista-cabecalho {
+          margin-bottom: 6px;
+        }
+        .barra {
+          margin-bottom: 6px;
+        }
+        .tabela-box {
+          height: auto;
+          flex: 1 1 0;
+          min-height: 0;
+          max-height: none;
+        }
+        table.lista td {
+          height: 34px;
+        }
+        th,
+        td {
+          padding-top: 5px;
+          padding-bottom: 5px;
+        }
+        .rodape {
+          margin-top: 6px;
+        }
+        .painel-lateral {
+          min-height: 0;
+          gap: 8px;
+        }
+        .preview-card {
+          min-height: 0;
+          padding: 11px;
+        }
+        #preview-stage {
+          min-height: 0;
+          flex-basis: 0;
+          margin-top: 8px;
+        }
+        .preview-metadados {
+          flex-wrap: wrap;
+          gap: 4px 10px;
+        }
+        .preview-card #preview-nome {
+          margin-top: 6px;
+        }
+        .preview-card #preview-status {
+          margin-top: 4px;
+        }
+        .log-card {
+          flex: 0 1 30%;
+          min-height: 96px;
+          padding: 10px;
+        }
+        #log {
+          min-height: 0;
+          padding: 6px 8px;
+        }
+      }
+      @media (min-width: 641px) and (max-height: 620px) {
+        body {
+          padding-top: 6px;
+          padding-bottom: 8px;
+          gap: 6px;
+        }
+        .workspace-top .card {
+          padding: 8px 11px;
+        }
+        .rules-card {
+          max-height: min(25vh, 120px);
+          padding: 7px 11px;
+        }
+        .workspace-top .suave {
+          display: none;
+        }
+        .log-card {
+          flex-basis: 25%;
+          min-height: 76px;
+        }
+      }
+      @media (min-width: 641px) and (max-width: 920px) {
+        .workspace-main {
+          grid-template-columns: minmax(0, 1fr) minmax(200px, 27vw);
+        }
+        .painel-lateral {
+          display: flex;
+        }
+      }
     </style>
   </head>
   <body>
-    <header>
-      <div class="marca-titulo">
+    <header class="app-titlebar">
+      <div class="marca-titulo" data-tauri-drag-region>
         <span class="marca" aria-hidden="true">O</span>
         <h1>Organizador</h1>
         <span id="selecionados-topo" class="contador">0 selecionados</span>
       </div>
+      <div class="titlebar-drag-region" data-tauri-drag-region></div>
       <div class="acoes-topo">
         <button
           id="btn-atualizar"
           title="Lê a pasta de novo e aplica as regras salvas"
         >
-          ↻ Atualizar
+          Atualizar
         </button>
         <button
           id="btn-desfazer"
           title="Devolve os arquivos do último lote para onde estavam"
         >
-          ↶ Desfazer último lote
+          Desfazer último lote
+        </button>
+      </div>
+      <div class="window-controls" aria-label="Controles da janela">
+        <button
+          id="btn-minimizar"
+          class="window-control"
+          type="button"
+          title="Minimizar"
+          aria-label="Minimizar janela"
+        >
+          <svg viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M2 6h8" />
+          </svg>
+        </button>
+        <button
+          id="btn-maximizar"
+          class="window-control"
+          type="button"
+          title="Maximizar"
+          aria-label="Maximizar janela"
+        >
+          <svg class="icone-maximizar" viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M2.5 2.5h7v7h-7z" />
+          </svg>
+          <svg class="icone-restaurar" viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M4.5 2.5h5v5" />
+            <path d="M7.5 4.5h-5v5h5z" />
+          </svg>
+        </button>
+        <button
+          id="btn-fechar"
+          class="window-control fechar"
+          type="button"
+          title="Fechar"
+          aria-label="Fechar aplicativo"
+        >
+          <svg viewBox="0 0 12 12" aria-hidden="true">
+            <path d="m3 3 6 6M9 3 3 9" />
+          </svg>
         </button>
       </div>
     </header>
@@ -863,7 +1345,7 @@
     <div class="workspace-top">
       <section class="card">
         <div class="card-titulo">
-          <h2>Origem</h2>
+          <h2 class="titulo-com-icone">Origem</h2>
           <select id="modo" aria-label="Modo de organização">
             <option value="manual">Manual (padrão)</option>
             <option value="regras">Automático com regras</option>
@@ -882,7 +1364,7 @@
 
       <section class="card">
         <div class="card-titulo">
-          <h2>Destino</h2>
+          <h2 class="titulo-com-icone">Destino</h2>
           <span class="suave" aria-hidden="true">Pasta padrão</span>
         </div>
         <div class="linha">
@@ -895,7 +1377,7 @@
         </div>
         <div class="destino-extra">
           <input id="nome-nova-pasta" placeholder="Nome da nova pasta" />
-          <button id="btn-criar-pasta">＋ Criar</button>
+          <button id="btn-criar-pasta">Criar</button>
         </div>
         <p id="resultado-criar-pasta" role="status" aria-live="polite" hidden></p>
         <p class="suave">
@@ -944,8 +1426,20 @@
         <div class="lista-cabecalho">
           <h2>Arquivos <span id="contagem-arquivos" class="contador">0</span></h2>
           <div class="lista-acoes">
-            <button id="btn-marcar">Marcar visíveis</button>
-            <button id="btn-desmarcar">Desmarcar</button>
+            <button
+              id="btn-toggle-selecao"
+              class="selecao-toggle"
+              type="button"
+              role="switch"
+              aria-checked="false"
+              aria-label="Mostrar somente os arquivos selecionados"
+            >
+              <span class="toggle-trilho" aria-hidden="true"></span>
+              <span id="toggle-selecao-label">Filtrar selecionados</span>
+            </button>
+            <button id="btn-excluir" class="perigo" disabled>
+              Excluir selecionados
+            </button>
           </div>
         </div>
         <div class="barra">
@@ -958,7 +1452,7 @@
         </div>
 
         <div class="tabela-box">
-          <table class="lista">
+          <table id="lista-cabecalho" class="lista">
             <colgroup>
               <col style="width: 34px" />
               <col />
@@ -977,15 +1471,27 @@
                 <th>Aviso</th>
               </tr>
             </thead>
-            <tbody id="lista"></tbody>
           </table>
-          <div id="lista-vazia" class="vazio" hidden></div>
+          <div id="lista-scroll" class="tabela-scroll">
+            <table class="lista">
+              <colgroup>
+                <col style="width: 34px" />
+                <col />
+                <col style="width: 82px" />
+                <col style="width: 92px" />
+                <col style="width: 190px" />
+                <col style="width: 92px" />
+              </colgroup>
+              <tbody id="lista"></tbody>
+            </table>
+            <div id="lista-vazia" class="vazio" hidden></div>
+          </div>
         </div>
 
         <div class="rodape">
           <span id="resumo" class="suave"></span>
           <button id="btn-mover" class="principal" disabled>
-            Mover selecionados →
+            Mover selecionados
           </button>
         </div>
       </section>
@@ -1009,7 +1515,10 @@
           </div>
           <div id="preview-destino" title="" hidden></div>
           <div id="preview-stage" class="vazio">
-            <div id="preview-placeholder">Clique no nome de um arquivo para visualizar aqui.</div>
+            <div id="preview-placeholder">
+              Clique no nome de um arquivo para visualizar aqui. DOCX e ODT são
+              exibidos como texto extraído.
+            </div>
           </div>
           <span id="preview-status" class="suave" role="status" aria-live="polite"></span>
         </section>
@@ -1022,11 +1531,101 @@
       </aside>
     </div>
 
+    <dialog id="dialog-confirmar-exclusao" class="confirm-dialog" aria-labelledby="titulo-confirmar-exclusao">
+      <h2 id="titulo-confirmar-exclusao">Mover arquivos para a Lixeira?</h2>
+      <p id="confirmar-exclusao-mensagem"></p>
+      <ul id="confirmar-exclusao-lista"></ul>
+      <p class="suave">Os arquivos serão enviados à Lixeira do Organizador e poderão ser restaurados com “Desfazer último lote”.</p>
+      <div class="confirm-acoes">
+        <button id="btn-cancelar-exclusao" type="button">Cancelar</button>
+        <button id="btn-confirmar-exclusao" class="perigo" type="button">Mover para a Lixeira</button>
+      </div>
+    </dialog>
+
     <script type="module">
       const { invoke } = window.__TAURI__.core;
       const abrirSeletor = window.__TAURI__.dialog?.open;
+      const appWindow = window.__TAURI__.window.getCurrentWindow();
 
       const $ = (id) => document.getElementById(id);
+      const listaScroll = $("lista-scroll");
+      const listaCabecalho = $("lista-cabecalho");
+
+      function ajustarCabecalhoLista() {
+        const largura = Math.max(
+          listaScroll.clientWidth,
+          listaScroll.scrollWidth,
+        );
+        listaCabecalho.style.width = `${largura}px`;
+        listaCabecalho.style.transform =
+          `translateX(${-listaScroll.scrollLeft}px)`;
+      }
+
+      listaScroll.addEventListener("scroll", ajustarCabecalhoLista, {
+        passive: true,
+      });
+      window.addEventListener("resize", ajustarCabecalhoLista);
+      new ResizeObserver(ajustarCabecalhoLista).observe(listaScroll);
+
+      async function atualizarControleMaximizar() {
+        const maximizada = await appWindow.isMaximized();
+        const botao = $("btn-maximizar");
+        botao.classList.toggle("maximizada", maximizada);
+        botao.title = maximizada ? "Restaurar" : "Maximizar";
+        botao.setAttribute(
+          "aria-label",
+          maximizada ? "Restaurar janela" : "Maximizar janela",
+        );
+      }
+
+      function tratarErroJanela(acao, erro) {
+        mostrarBanner(`Não foi possível ${acao}: ${erro}`, "erro");
+      }
+
+      $("btn-minimizar").onclick = async () => {
+        try {
+          await appWindow.minimize();
+        } catch (erro) {
+          tratarErroJanela("minimizar a janela", erro);
+        }
+      };
+      $("btn-maximizar").onclick = async () => {
+        try {
+          await appWindow.toggleMaximize();
+          await atualizarControleMaximizar();
+        } catch (erro) {
+          tratarErroJanela("alterar o tamanho da janela", erro);
+        }
+      };
+      $("btn-fechar").onclick = async () => {
+        try {
+          await appWindow.close();
+        } catch (erro) {
+          tratarErroJanela("fechar o aplicativo", erro);
+        }
+      };
+      document
+        .querySelectorAll("[data-tauri-drag-region]")
+        .forEach((regiao) => {
+          regiao.addEventListener("pointerdown", (evento) => {
+            if (evento.button !== 0) return;
+            appWindow.startDragging().catch((erro) => {
+              tratarErroJanela("mover a janela", erro);
+            });
+          });
+          regiao.addEventListener("dblclick", async (evento) => {
+            evento.preventDefault();
+            try {
+              await appWindow.toggleMaximize();
+              await atualizarControleMaximizar();
+            } catch (erro) {
+              tratarErroJanela("alterar o tamanho da janela", erro);
+            }
+          });
+        });
+      atualizarControleMaximizar().catch((erro) => {
+        tratarErroJanela("consultar o tamanho da janela", erro);
+      });
 
       // ---------- estado ----------
       let itens = []; // todos os arquivos da pasta (com marcado, destino, conflito...)
@@ -1035,6 +1634,7 @@
       const colapsados = new Set([""]); // grupos recolhidos; "Sem regra" começa recolhido
       let filtro = "";
       let ordem = "nome";
+      let mostrarSomenteSelecionados = false;
       let ocupado = false;
       let usarRegras = lerSalvo("modo") === "regras";
       let previewUrl = "";
@@ -1042,6 +1642,63 @@
       let itemPreviaSelecionado = null;
       let previewZoom = 1;
       let previewPan = null;
+      let documentoPrevia = null;
+
+      const caminhosIcones = {
+        folder: "M3 7h7l2 2h9v10H3z M3 10h18",
+        folderPlus: "M3 7h7l2 2h9v10H3z M3 10h18 M12 12v5 M9.5 14.5h5",
+        refresh: "M20 7v5h-5 M4 17v-5h5 M5.6 9A7 7 0 0 1 18 6l2 6 M4 12l2 6a7 7 0 0 0 12.4-3",
+        undo: "M9 14 4 9l5-5 M4 9h10a6 6 0 0 1 0 12h-2",
+        trash: "M4 7h16 M10 11v6 M14 11v6 M6 7l1 14h10l1-14 M9 7V4h6v3",
+        file: "M6 3h8l5 5v13H6z M14 3v5h5 M9 13h7 M9 17h7",
+        image: "M4 4h16v16H4z M4 15l5-5 4 4 3-3 4 4 M15 9h.01",
+        sheet: "M6 3h8l5 5v13H6z M14 3v5h5 M9 12h7 M9 16h7 M12 11v7",
+        video: "M4 6h12v12H4z M16 10l5-3v10l-5-3z",
+        audio: "M10 18V5l10-2v13 M10 8l10-2 M7 21a3 2 0 1 0 0-4 3 2 0 0 0 0 4 M17 18a3 2 0 1 0 0-4 3 2 0 0 0 0 4",
+        archive: "M4 4h16v5H4z M6 9v11h12V9 M10 13h4 M11 6h2",
+      };
+
+      function criarIcone(nome, classe = "") {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("aria-hidden", "true");
+        svg.setAttribute("focusable", "false");
+        svg.classList.add("icone-svg");
+        if (classe) svg.classList.add(classe);
+        const path = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "path",
+        );
+        path.setAttribute("d", caminhosIcones[nome] || caminhosIcones.file);
+        svg.appendChild(path);
+        return svg;
+      }
+
+      function adicionarIcone(elemento, nome) {
+        elemento.prepend(criarIcone(nome));
+      }
+
+      function iconeDoArquivo(nome) {
+        const extensao = nome.split(".").pop().toLowerCase();
+        if (
+          ["png", "jpg", "jpeg", "gif", "webp", "bmp", "svg"].includes(
+            extensao,
+          )
+        ) {
+          return "image";
+        }
+        if (["xls", "xlsx", "csv", "ods"].includes(extensao)) return "sheet";
+        if (["mp4", "mkv", "avi", "mov", "webm"].includes(extensao)) {
+          return "video";
+        }
+        if (["mp3", "wav", "flac", "m4a", "ogg"].includes(extensao)) {
+          return "audio";
+        }
+        if (["zip", "rar", "7z", "tar", "gz"].includes(extensao)) {
+          return "archive";
+        }
+        return "file";
+      }
 
       // ---------- utilidades ----------
       function lerSalvo(chave) {
@@ -1076,6 +1733,39 @@
         log(msg);
       }
 
+      function substituirBotaoComIcone(id, icone, rotulo) {
+        const botao = $(id);
+        botao.replaceChildren(criarIcone(icone), document.createTextNode(rotulo));
+      }
+
+      function confirmarExclusao(selecionados) {
+        const dialogo = $("dialog-confirmar-exclusao");
+        $("confirmar-exclusao-mensagem").textContent =
+          `Você está prestes a excluir ${selecionados.length} arquivo(s) da pasta de origem:`;
+        const lista = $("confirmar-exclusao-lista");
+        const nomes = selecionados.slice(0, 12).map((item) => {
+          const li = document.createElement("li");
+          li.textContent = item.nome;
+          return li;
+        });
+        if (selecionados.length > nomes.length) {
+          const li = document.createElement("li");
+          li.textContent = `e mais ${selecionados.length - nomes.length} arquivo(s)`;
+          nomes.push(li);
+        }
+        lista.replaceChildren(...nomes);
+
+        return new Promise((resolve) => {
+          dialogo.returnValue = "";
+          dialogo.addEventListener(
+            "close",
+            () => resolve(dialogo.returnValue === "confirmar"),
+            { once: true },
+          );
+          dialogo.showModal();
+        });
+      }
+
       function limparPreview() {
         previewRequest++;
         if (previewUrl) URL.revokeObjectURL(previewUrl);
@@ -1085,6 +1775,7 @@
         $("preview-status").textContent = "";
         $("preview-status").className = "suave";
         previewZoom = 1;
+        documentoPrevia = null;
         atualizarZoom();
       }
 
@@ -1100,6 +1791,14 @@
             caminho: it.caminho,
           });
           if (requisicao !== previewRequest) return;
+
+          if (arquivo.documento) {
+            documentoPrevia = arquivo.documento;
+            renderizarDocumento();
+            $("preview-status").textContent =
+              `${fmtTamanho(it.tamanho)} · documento paginado`;
+            return;
+          }
 
           const bytes = Uint8Array.from(
             atob(arquivo.conteudo),
@@ -1139,7 +1838,10 @@
           $("preview-stage").classList.remove("vazio");
           $("preview-stage").replaceChildren(midia);
           atualizarZoom();
-          $("preview-status").textContent = `${fmtTamanho(it.tamanho)} · ${arquivo.mime}`;
+          const extensao = it.nome.split(".").pop().toLowerCase();
+          $("preview-status").textContent = ["docx", "odt"].includes(extensao)
+            ? `${fmtTamanho(it.tamanho)} · texto extraído de ${extensao.toUpperCase()}`
+            : `${fmtTamanho(it.tamanho)} · ${arquivo.mime}`;
         } catch (erro) {
           if (requisicao !== previewRequest) return;
           $("preview-status").textContent = `${erro}`;
@@ -1183,7 +1885,8 @@
         $("preview-stage").replaceChildren(
           Object.assign(document.createElement("div"), {
             id: "preview-placeholder",
-            textContent: "Clique no nome de um arquivo para visualizar aqui.",
+            textContent:
+              "Clique no nome de um arquivo para visualizar aqui. DOCX e ODT são exibidos como texto extraído.",
           }),
         );
         document.querySelectorAll("tr.preview-selecionado").forEach((tr) => {
@@ -1195,7 +1898,10 @@
         $("preview-zoom-nivel").textContent =
           `${Math.round(previewZoom * 100)}%`;
         const midia = $("preview-midia");
-        if (!midia) return;
+        if (!midia) {
+          if (documentoPrevia) renderizarDocumento();
+          return;
+        }
         midia.style.width = `${previewZoom * 100}%`;
         midia.style.minHeight = "100%";
         const texto = midia.querySelector("pre");
@@ -1205,6 +1911,100 @@
       function alterarZoom(delta) {
         previewZoom = Math.min(4, Math.max(0.25, previewZoom + delta));
         atualizarZoom();
+      }
+
+      function criarParagrafoDocumento(modelo) {
+        const paragrafo = document.createElement("p");
+        paragrafo.className = "doc-paragrafo";
+        const estilo = (modelo.estilo || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+        if (estilo.includes("title")) paragrafo.classList.add("doc-titulo");
+        else if (estilo.includes("heading1") || estilo.includes("titulo1")) {
+          paragrafo.classList.add("doc-heading1");
+        } else if (estilo.includes("heading2") || estilo.includes("titulo2")) {
+          paragrafo.classList.add("doc-heading2");
+        } else if (estilo.includes("heading3") || estilo.includes("titulo3")) {
+          paragrafo.classList.add("doc-heading3");
+        }
+        const alinhamento = modelo.alinhamento;
+        if (["left", "right", "center", "justify"].includes(alinhamento)) {
+          paragrafo.style.textAlign = alinhamento;
+        }
+        for (const trecho of modelo.trechos || []) {
+          let elemento = document.createTextNode(trecho.texto);
+          if (trecho.sublinhado) {
+            const sublinhado = document.createElement("u");
+            sublinhado.appendChild(elemento);
+            elemento = sublinhado;
+          }
+          if (trecho.italico) {
+            const italico = document.createElement("em");
+            italico.appendChild(elemento);
+            elemento = italico;
+          }
+          if (trecho.negrito) {
+            const negrito = document.createElement("strong");
+            negrito.appendChild(elemento);
+            elemento = negrito;
+          }
+          paragrafo.appendChild(elemento);
+        }
+        return paragrafo;
+      }
+
+      function renderizarDocumento() {
+        if (!documentoPrevia) return;
+        const stage = $("preview-stage");
+        const larguraDisponivel = Math.max(260, stage.clientWidth - 36);
+        const larguraPagina = Math.min(794, larguraDisponivel) * previewZoom;
+        const alturaPagina = larguraPagina * (297 / 210);
+        const escala = larguraPagina / 794;
+        const visualizador = document.createElement("div");
+        visualizador.className = "doc-visualizador";
+        visualizador.style.width = `${larguraPagina}px`;
+        visualizador.style.fontSize = `${14 * escala}px`;
+        visualizador.style.gap = `${18 * escala}px`;
+        stage.classList.remove("vazio");
+        stage.replaceChildren(visualizador);
+
+        let pagina;
+        let conteudo;
+        let numero = 0;
+        const novaPagina = () => {
+          numero += 1;
+          pagina = document.createElement("article");
+          pagina.className = "doc-pagina";
+          pagina.style.width = `${larguraPagina}px`;
+          pagina.style.height = `${alturaPagina}px`;
+          conteudo = document.createElement("div");
+          conteudo.className = "doc-pagina-conteudo";
+          pagina.appendChild(conteudo);
+          const rodape = document.createElement("footer");
+          rodape.className = "doc-pagina-numero";
+          rodape.textContent = `${numero}`;
+          pagina.appendChild(rodape);
+          visualizador.appendChild(pagina);
+        };
+        novaPagina();
+
+        for (const modelo of documentoPrevia.paragrafos || []) {
+          if (modelo.quebra_pagina_antes && conteudo.childElementCount) {
+            novaPagina();
+          }
+          const paragrafo = criarParagrafoDocumento(modelo);
+          conteudo.appendChild(paragrafo);
+          if (
+            conteudo.scrollHeight > conteudo.clientHeight &&
+            conteudo.childElementCount > 1
+          ) {
+            conteudo.removeChild(paragrafo);
+            novaPagina();
+            conteudo.appendChild(paragrafo);
+          }
+          const excesso = conteudo.scrollHeight - conteudo.clientHeight;
+          if (excesso > 0 && conteudo.childElementCount === 1) {
+            pagina.style.height = `${alturaPagina + excesso}px`;
+          }
+        }
       }
 
       function fmtTamanho(bytes) {
@@ -1317,7 +2117,9 @@
       function visiveis() {
         const f = filtro.trim().toLowerCase();
         const lista = itens.filter(
-          (it) => !f || it.nome.toLowerCase().includes(f),
+          (it) =>
+            (!mostrarSomenteSelecionados || it.marcado) &&
+            (!f || it.nome.toLowerCase().includes(f)),
         );
         const comparar = {
           nome: (a, b) =>
@@ -1402,6 +2204,7 @@
         nomeArquivo.textContent = it.nome;
         nomeArquivo.onclick = () => visualizarArquivo(it);
         nomeArquivo.setAttribute("aria-label", `Visualizar ${it.nome}`);
+        nomeArquivo.prepend(criarIcone(iconeDoArquivo(it.nome), "icone-arquivo"));
         tdNome.appendChild(nomeArquivo);
         tdNome.title = it.nome;
 
@@ -1483,12 +2286,19 @@
         grupos = [];
 
         const lista = visiveis();
-        $("contagem-arquivos").textContent = itens.length;
+        $("contagem-arquivos").textContent = lista.length;
+        $("contagem-arquivos").title =
+          `${lista.length} exibido(s) de ${itens.length} arquivo(s)`;
         $("lista-vazia").hidden = lista.length > 0;
-        $("lista-vazia").textContent =
-          itens.length === 0
-            ? "Nenhum arquivo nesta pasta."
-            : "Nenhum arquivo combina com a busca.";
+        if (itens.length === 0) {
+          $("lista-vazia").textContent = "Nenhum arquivo nesta pasta.";
+        } else if (lista.length === 0 && mostrarSomenteSelecionados) {
+          $("lista-vazia").textContent = filtro.trim()
+            ? "Nenhum arquivo selecionado combina com a busca."
+            : "Nenhum arquivo selecionado. Desative o filtro para ver todos.";
+        } else {
+          $("lista-vazia").textContent = "Nenhum arquivo combina com a busca.";
+        }
 
         const mapa = new Map();
         for (const it of lista) {
@@ -1510,6 +2320,8 @@
           }
         }
 
+        ajustarCabecalhoLista();
+        requestAnimationFrame(ajustarCabecalhoLista);
         sincronizar();
       }
 
@@ -1540,11 +2352,41 @@
                   : ""
               }`;
 
-        $("btn-mover").textContent =
+        substituirBotaoComIcone(
+          "btn-mover",
+          "folderPlus",
           prontos.length > 0
             ? `Mover ${prontos.length} arquivo(s)`
-            : "Mover selecionados";
+            : "Mover selecionados",
+        );
         $("btn-mover").disabled = ocupado || prontos.length === 0;
+        substituirBotaoComIcone(
+          "btn-excluir",
+          "trash",
+          `Excluir selecionados${marcados.length ? ` (${marcados.length})` : ""}`,
+        );
+        $("btn-excluir").disabled = ocupado || marcados.length === 0;
+        const alternarSelecao = $("btn-toggle-selecao");
+        alternarSelecao.setAttribute(
+          "aria-label",
+          mostrarSomenteSelecionados
+            ? "Mostrar todos os arquivos"
+            : "Mostrar somente os arquivos selecionados",
+        );
+        alternarSelecao.setAttribute(
+          "aria-checked",
+          `${mostrarSomenteSelecionados}`,
+        );
+        $("toggle-selecao-label").textContent = mostrarSomenteSelecionados
+          ? "Somente selecionados"
+          : "Filtrar selecionados";
+        alternarSelecao.disabled = ocupado || itens.length === 0;
+        if (
+          mostrarSomenteSelecionados &&
+          linhas.some(({ it }) => !it.marcado)
+        ) {
+          desenhar();
+        }
       }
 
       async function analisar(salvarRegrasAntes) {
@@ -1685,6 +2527,50 @@
         $("resultado-criar-pasta").hidden = true;
       });
 
+      adicionarIcone($("btn-atualizar"), "refresh");
+      adicionarIcone($("btn-desfazer"), "undo");
+      adicionarIcone($("btn-escolher"), "folder");
+      adicionarIcone($("btn-downloads"), "folder");
+      adicionarIcone($("btn-escolher-destino"), "folder");
+      adicionarIcone($("btn-criar-pasta"), "folderPlus");
+      adicionarIcone($("btn-add-regra"), "folderPlus");
+      adicionarIcone($("btn-padrao"), "refresh");
+      document
+        .querySelectorAll(".workspace-top .card-titulo h2")
+        .forEach((titulo) =>
+          titulo.prepend(criarIcone("folder", "icone-arquivo")),
+        );
+      $("btn-cancelar-exclusao").onclick = () =>
+        $("dialog-confirmar-exclusao").close("cancelar");
+      $("btn-confirmar-exclusao").onclick = () =>
+        $("dialog-confirmar-exclusao").close("confirmar");
+      $("btn-excluir").onclick = async () => {
+        const selecionados = itens.filter((it) => it.marcado);
+        if (!selecionados.length || !(await confirmarExclusao(selecionados))) {
+          return;
+        }
+
+        definirOcupado(true);
+        try {
+          const resultado = await invoke("excluir_arquivos", {
+            pasta: pasta(),
+            caminhos: selecionados.map((it) => it.caminho),
+          });
+          const falhas = resultado.erros.length
+            ? ` Falhas: ${resultado.erros.join("; ")}`
+            : "";
+          mostrarBanner(
+            `${resultado.quantidade} arquivo(s) enviado(s) à Lixeira do Organizador.${falhas}`,
+            resultado.erros.length ? "erro" : "ok",
+          );
+          await analisar(false);
+        } catch (erro) {
+          mostrarBanner(`${erro}`, "erro");
+        } finally {
+          definirOcupado(false);
+        }
+      };
+
       $("modo").value = usarRegras ? "regras" : "manual";
       $("btn-preview-mais").onclick = () => alterarZoom(0.25);
       $("btn-preview-menos").onclick = () => alterarZoom(-0.25);
@@ -1692,9 +2578,13 @@
         previewZoom = 1;
         atualizarZoom();
       };
+      window.addEventListener("resize", () => {
+        if (documentoPrevia) renderizarDocumento();
+      });
       $("btn-preview-expandir").onclick = () => {
         const expandido = $("preview-card").classList.toggle("expandida");
         document.body.classList.toggle("preview-expandida", expandido);
+        if (documentoPrevia) renderizarDocumento();
         $("btn-preview-expandir").setAttribute("aria-pressed", `${expandido}`);
         $("btn-preview-expandir").title = expandido
           ? "Restaurar tamanho da prévia"
@@ -1790,13 +2680,9 @@
         desenhar();
       };
 
-      $("btn-marcar").onclick = () => {
-        for (const it of visiveis()) it.marcado = true;
-        sincronizar();
-      };
-      $("btn-desmarcar").onclick = () => {
-        for (const it of visiveis()) it.marcado = false;
-        sincronizar();
+      $("btn-toggle-selecao").onclick = () => {
+        mostrarSomenteSelecionados = !mostrarSomenteSelecionados;
+        desenhar();
       };
 
       $("btn-atualizar").onclick = async () => {
